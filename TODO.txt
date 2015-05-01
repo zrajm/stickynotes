@@ -1,10 +1,29 @@
 -*- org -*-
 
-* TODO Object/module for tracking notes
-* TODO Load stickies on startup
+* TODO Load list of stickies from server too
+* TODO Creating notes
+* TODO Deleting notes
+* TODO Note Cache should be a module
+  A hook/callback to be invoked whenever the note cache contents change (for
+  updating the JSON in the background), and maybe initialize push to server.
+
+  get(id) -- Return one note.
+
+  set() -- Should keep track of changed values, so that push() can push the
+  smallest possible changeset.
+
+  push() -- Should push all notes that have been updated (no id should have to
+  be provided).
+
+  Should automatically do long pulling from server.
+* TODO Proper, random sticky IDs
 * TODO Update stickies on remote change
 * TODO Right-click for color change
-* TODO Store/load coords of stickies
 * TODO Resizeable(?)
-* TODO Not move outside screen
+* DONE Load stickies on startup
+  CLOSED: [2015-05-02 Sat 00:05]
+* DONE Store/load coords of stickies
+  CLOSED: [2015-05-02 Sat 00:05]
+* DONE Not move outside screen
+  CLOSED: [2015-05-02 Sat 00:05]
 
