@@ -25,11 +25,11 @@ Object.keys(notes).forEach(function(id) {
     $("<div>", {
         class: "note",
         contenteditable: "",
-        text: note.text
+        text: note.text,
+        id: id
     })
-    .data({ id: id })
         .css({ left: note.x, top: note.y, background: note.color })
-    .appendTo("main");
+        .appendTo("main");
 });
 
 // var notelist = [
@@ -45,6 +45,7 @@ Object.keys(notes).forEach(function(id) {
 //         class: "note",
 //         contenteditable: "",
 //         text: note.text
+//         id: id
 //     })
 //         .data({ id: id })
 //         .css({ left: note.x, top: note.y, background: note.color })
@@ -64,7 +65,7 @@ var token = function() {
 };
 
 function stopEvent(event, ui) {
-    var id = ui.helper.data("id"), x = ui.offset.left, y = ui.offset.top;
+    var id = ui.helper.prop("id"), x = ui.offset.left, y = ui.offset.top;
 
     //notes.move(id, x, y);
 
@@ -82,7 +83,7 @@ var main = $("main");
 
 $("main").on("input", function (event) {
     var element = $(event.target),
-        id      = element.data("id"),
+        id      = element.prop("id"),
         value   = element.html();
     notes[id].text = value;
     put(id);
