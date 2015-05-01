@@ -1,0 +1,10 @@
+-*- org -*-
+
+* TODO Object/module for tracking notes
+* TODO Load stickies on startup
+* TODO Update stickies on remote change
+* TODO Right-click for color change
+* TODO Store/load coords of stickies
+* TODO Resizeable(?)
+* TODO Not move outside screen
+
