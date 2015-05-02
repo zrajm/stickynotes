@@ -87,17 +87,16 @@ function pullNote(id, success) {
 
 // Push one note to the server.
 function pushNote(id) {
-    $.ajax("do.cgi?" + id, {
-        type: "PUT",
-        data: JSON.stringify(noteCache[id]),
-    });
+    var noteData = noteCache[id],
+        json     = JSON.stringify(noteData);
+    $.ajax({"url": "put.cgi?" + id, "type": "PUT", "data": json});
     showNotesData();
 }
 
 // Update note with specified ID, or create it, if it doesn't exist.
 function drawNote(id) {
-    var noteElement = $('#' + id),
-        noteData    = noteCache[id];
+    var noteData    = noteCache[id],
+        noteElement = $('#' + id);
     if (noteElement.length > 0) {
         console.log("MODIFYING " + id);
         noteElement.css({

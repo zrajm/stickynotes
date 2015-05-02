@@ -20,14 +20,6 @@ esac
 
 FILE="$NOTE_DIR/$NOTE_ID";
 case "$REQUEST_METHOD" in
-    PUT)
-        read OLD_PAYLOAD <"$FILE"
-        read NEW_PAYLOAD
-        if [ "$NEW_PAYLOAD" != "$OLD_PAYLOAD" ]; then
-            debug "PUT $NOTE_ID -- $NEW_PAYLOAD"
-            echo "$NEW_PAYLOAD" >"$FILE"
-        fi
-        echo "Content-Type: application/JSON\n" ;;
     GET)
         read PAYLOAD <"$FILE"
         debug "GET $NOTE_ID -- $PAYLOAD"
