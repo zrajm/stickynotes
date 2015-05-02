@@ -1,74 +1,44 @@
-#!/usr/bin/perl
+#!/bin/dash
 
-use 5.10.0;
-use warnings;
-use strict;
+NOTE_DIR="notes"
+LOG_FILE="index.log"
 
-my $dir     = "notes";
-my $logfile = "index.log";
+debug() { echo "$@" >>"$LOG_FILE"; }
 
-sub write_file {
-    my ($file, $data) = @_;
-    open my $out, ">", $file
-        or die "Cannot open file '$file' for writing: $!\n";
-    print $out $data;
-    close $out
-        or die "Cannot close file '$file' after writing: $!\n";
-}
+##############################################################################
 
-sub read_file {
-    my ($file, $data) = @_;
-    open my $in, "<", $file
-        or die "Cannot open file '$file' for reading: $!\n";
-    return join "", <$in>;
-}
+NOTE_ID="$1"
 
-sub erase_file {
-    my ($file) = @_;
-    unlink $file or die "Cannot erase file '$file': $!\n";
-}
+# Note ID must only contain alphanumeric characters.
+case "$NOTE_ID" in
+    *[!a-z0-9]*)
+        debug "!!! $NOTE_ID -- Non-alphanumeric note ID"
+        exit 2 ;;
+esac
 
-{
-    open my $log, ">>", $logfile;
-    sub debug { say $log @_ }
-}
+##############################################################################
 
-################################################################################
-
-my $method = $ENV{REQUEST_METHOD} // "";
-my $id     = shift(@ARGV) // "";
-
-if (not $method) {
-    die "This is a CGI script, it cannot be run from the command line\n";
-}
-
-if (not $id =~ /^[a-z0-9]+$/) {
-    die "bad sticky note ID '$id' (must be strictly alphanumerical)\n";
-}
-
-my $file = "$dir/$id";
-for ($method) {
-    /^GET$/ and do {
-        my $payload = read_file($file);
-        debug "GET $id -- $payload";
-        say "Content-Type: application/json\n";
-        say $payload;
-        exit 0;
-    };
-    # FIXME: Not tested
-    /^DELETE$/ and do {
-        debug "DEL $id";
-        say "Content-Type: application/json\n";
-        erase_file($file);
-        exit 0;
-    };
-    /^PUT$/ and do {
-        my $payload = join "", <STDIN>;
-        debug "PUT $id -- $payload";
-        write_file($file, $payload);
-        say "Content-Type: application/JSON\n";
-        exit 0;
-    }
-}
+FILE="$NOTE_DIR/$NOTE_ID";
+case "$REQUEST_METHOD" in
+    PUT)
+        read OLD_PAYLOAD <"$FILE"
+        read NEW_PAYLOAD
+        if [ "$NEW_PAYLOAD" != "$OLD_PAYLOAD" ]; then
+            debug "PUT $NOTE_ID -- $NEW_PAYLOAD"
+            echo "$NEW_PAYLOAD" >"$FILE"
+        fi
+        echo "Content-Type: application/JSON\n" ;;
+    GET)
+        read PAYLOAD <"$FILE"
+        debug "GET $NOTE_ID -- $PAYLOAD"
+        echo "Content-Type: application/json\n"
+        echo $PAYLOAD ;;
+    DELETE)                                    # FIXME: Not tested
+        debug "DEL $NOTE_ID"
+        echo "Content-Type: application/json\n"
+        rm -f "$FILE" ;;
+    "") echo "This is a CGI script, it can't be run from the command line" >&2 ;;
+    *)  echo "Unknown request method '$REQUEST_METHOD'" >&2 ;;
+esac
 
 #[eof]
