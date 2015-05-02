@@ -19,11 +19,27 @@ var noteCache = {
 Object.keys(noteCache).forEach(function(id) {
     pullNote(id, function (noteData) {
         noteCache[id] = noteData;
-        drawNote(id, noteData);
+        drawNote(id);
     });
 });
 
 ////////////////////////////////////////////////////////////////////////////////
+
+// Poll updates from server.
+function poll() {
+    console.log('started polling');
+    $.ajax({
+        url: "poll.cgi",
+        success: function (noteUpdates) {
+            var id;
+            for (id in noteUpdates) {
+                noteCache[id] = noteUpdates[id];
+                drawNote(id);
+            }
+        },
+        complete: poll
+    });
+}
 
 // After note has been dragged, push new data to server.
 function stopEvent(event, ui) {
@@ -50,8 +66,6 @@ function showNotesData() {
 }
 
 var main = $("main");
-
-
 $("main").on("input", function (event) {
     var element = $(event.target),
         id      = element.prop("id"),
@@ -59,6 +73,7 @@ $("main").on("input", function (event) {
     noteCache[id].text = value;
     pushNote(id);
 });
+poll();
 
 // Update note with newest note data from server.
 function pullNote(id, success) {
@@ -80,8 +95,9 @@ function pushNote(id) {
 }
 
 // Update note with specified ID, or create it, if it doesn't exist.
-function drawNote(id, noteData) {
-    var noteElement = $('#' + id);
+function drawNote(id) {
+    var noteElement = $('#' + id),
+        noteData    = noteCache[id];
     if (noteElement.length > 0) {
         console.log("MODIFYING " + id);
         noteElement.css({
