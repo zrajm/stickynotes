@@ -52,4 +52,5 @@
        -webkit-transform: rotate(XXdeg);
 
    where XX is a random number between 5.0 and -5.0
-
+** DONE Favicon
+   CLOSED: [2015-05-03 Sun 00:37]
