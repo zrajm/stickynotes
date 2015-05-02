@@ -1,5 +1,9 @@
 -*- org -*-
 
+* TODO Sync full state at time intervals
+  Should check occasionally that everything is up-to-date with server, so that
+  if notes get fucked up they auto-adjust after some time interval. (A checksum
+  ping?)
 * TODO Lock note that is being moved by other client
   Make it transparent?
 * TODO Error when server isn't responding
@@ -8,7 +12,8 @@
 * TODO Load list of stickies from server too
 * TODO Creating notes
 * TODO Deleting notes
-* TODO Note Cache should be a module
+* TODO Proper, random sticky IDs
+* TODO Note cache should be a module
   A hook/callback to be invoked whenever the note cache contents change (for
   updating the JSON in the background), and maybe initialize push to server.
 
@@ -21,15 +26,20 @@
   be provided).
 
   Should automatically do long pulling from server.
-* TODO Proper, random sticky IDs
 * TODO Right-click for color change
-* TODO Resizeable(?)
-* DONE Load stickies on startup
-  CLOSED: [2015-05-02 Sat 00:05]
-* DONE Store/load coords of stickies
-  CLOSED: [2015-05-02 Sat 00:05]
-* DONE Not move outside screen
-  CLOSED: [2015-05-02 Sat 00:05]
-* DONE Update stickies on remote change
-  CLOSED: [2015-05-02 Sat 15:17]
+* SOMEDAY/MAYBE
+** TODO Resizeable(?)
+* FINISHED
+** DONE Load stickies on startup
+   CLOSED: [2015-05-02 Sat 00:05]
+** DONE Store/load coords of stickies
+   CLOSED: [2015-05-02 Sat 00:05]
+** DONE Not move outside screen
+   CLOSED: [2015-05-02 Sat 00:05]
+** DONE Update stickies on remote change
+   CLOSED: [2015-05-02 Sat 15:17]
+** DONE Dragging should only affect dragged item
+   CLOSED: [2015-05-02 Sat 21:24]
+   jQuery UI 'stack'ing shouldn't be used when dragging, as this forces updates
+   of all stickies.
 

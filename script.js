@@ -16,18 +16,30 @@ var noteCache = {
 };
 
 // Fetch notedata from server, redraw screen.
+maxZ = 0;
 Object.keys(noteCache).forEach(function(id) {
     pullNote(id, function (noteData) {
         noteCache[id] = noteData;
+        if (maxZ < noteData.z) { maxZ = noteData.z; }
         drawNote(id);
     });
 });
+
+function putNoteOnTop(id) {
+    var z = noteCache[id].z, element = $("#" + id);
+    if (z < maxZ) {
+        maxZ += 1;
+        noteCache[id].z = maxZ;
+        pushNote(id);
+        element.zIndex(maxZ);
+        showNotesData();
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 
 // Poll updates from server.
 function poll() {
-    console.log('started polling');
     $.ajax({
         url: "poll.cgi",
         success: function (noteUpdates) {
@@ -42,23 +54,11 @@ function poll() {
 }
 
 // After note has been dragged, push new data to server.
-function stopEvent(event, ui) {
+function stopDragging(_, ui) {
     var id = ui.helper.prop("id");
     noteCache[id].x = ui.offset.left;          // x
     noteCache[id].y = ui.offset.top;           // y
-
-    // Refactor: Remove the need for this loop
-    //
-    // The jQuery UI 'stack' option causes z-index to be set for all notes,
-    // which is really bad cause then we'll have to sync all of them (and not
-    // only the dragged one) to the server. Not good when we're later on going
-    // to push those events to clients as well.
-    $(".note").each(function (_, element) {    // z (of all notes)
-        var element = $(element);
-        var id = element.prop("id");
-        noteCache[id].z = element.css("z-index");
-        pushNote(id);
-    });
+    pushNote(id);
 }
 
 function showNotesData() {
@@ -115,9 +115,8 @@ function drawNote(id) {
             "background": noteData.color
         }).appendTo("main").draggable({
             "containment": "parent",
-            "stop"       : stopEvent,
-            "stack"      : "*"
-        });
+            "stop"       : stopDragging,
+        }).mousedown(function () { putNoteOnTop(id); });
     }
     showNotesData();
 }
