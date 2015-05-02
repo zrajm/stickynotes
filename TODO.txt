@@ -1,12 +1,15 @@
 -*- org -*-
 
+* TODO Sticky sessions
+  Should automatically be created when invoked. Use hashlocation to initiate
+  one.
 * TODO Sync full state at time intervals
   Should check occasionally that everything is up-to-date with server, so that
   if notes get fucked up they auto-adjust after some time interval. (A checksum
   ping?)
 * TODO Lock note that is being moved by other client
   Make it transparent?
-* TODO Error when server isn't responding
+* TODO Display error when server isn't responding
   Background goes red? Dashed lines? Move sticky back if it's move cannot be
   registered with server?
 * TODO Load list of stickies from server too
@@ -42,4 +45,11 @@
    CLOSED: [2015-05-02 Sat 21:24]
    jQuery UI 'stack'ing shouldn't be used when dragging, as this forces updates
    of all stickies.
+** DONE Slightly rotated stickies
+   CLOSED: [2015-05-02 Sat 22:21]
+   Do this randomly on reload.
+
+       -webkit-transform: rotate(XXdeg);
+
+   where XX is a random number between 5.0 and -5.0
 

@@ -36,6 +36,11 @@ function putNoteOnTop(id) {
     }
 }
 
+// Returns a random number between min (inclusive) and max (exclusive)
+function rnd(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // Poll updates from server.
@@ -112,7 +117,8 @@ function drawNote(id) {
             "left"      : noteData.x,
             "top"       : noteData.y,
             "z-index"   : noteData.z,
-            "background": noteData.color
+            "background": noteData.color,
+            "-webkit-transform": "rotate(" + rnd(-10, 10) + "deg)"
         }).appendTo("main").draggable({
             "containment": "parent",
             "stop"       : stopDragging,
