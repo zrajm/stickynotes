@@ -3,6 +3,12 @@
 
 NOTE_DIR="notes"
 
+# This script modifies the strings passed with the HTTP status code in order to
+# give more intelligeble output in the Chrome console. As far as I know this is
+# in accordance with the HTTP stardard. For a fuller discussion see the
+# following thread on stackoverflow: http://stackoverflow.com/questions/8102208
+# "Is it acceptable to modify the text sent with the HTTP status code?"
+
 ##############################################################################
 ##                                                                          ##
 ##  Functions                                                               ##
