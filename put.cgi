@@ -30,12 +30,12 @@ check_note_id() {
 
 # Very simplistic check. Only look to see that JSON data starts and ends with
 # curly braces.
-check_payload() {
-    local PAYLOAD="$1"
-    case "$PAYLOAD" in
-        "")      reply "400 Bad Request" "Missing request body" ;;
+check_json() {
+    local JSON="$1" ERROR="$2" MSG="$3"
+    case "$JSON" in
         "{"*"}") : ;;
-        *)       reply "400 Bad Request" "Malformed JSON in request body" ;;
+        "") reply "$ERROR"   "Missing data${MSG:+ in $MSG}" ;;
+        *)  reply "$ERROR" "Malformed JSON${MSG:+ in $MSG}" ;;
     esac
 }
 
@@ -54,9 +54,9 @@ write_data() {
 ##############################################################################
 
 NOTE_ID="$1";            check_note_id "$NOTE_ID"
-[ ! -t 0 ] && read JSON; check_payload "$JSON"
+[ ! -t 0 ] && read JSON; check_json "$JSON" "400 Bad Request" "request body"
 write_data "$NOTE_ID" "$JSON" \
-    || reply "403 Forbidden" "Failed to write data"
+    || reply "403 Forbidden" "File write protected"
 reply "204 No Content"
 
 #[eof]

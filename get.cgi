@@ -28,6 +28,17 @@ check_note_id() {
     esac
 }
 
+# Very simplistic check. Only look to see that JSON data starts and ends with
+# curly braces.
+check_json() {
+    local JSON="$1" ERROR="$2" MSG="$3"
+    case "$JSON" in
+        "{"*"}") : ;;
+        "") reply "$ERROR"   "Missing data${MSG:+ in $MSG}" ;;
+        *)  reply "$ERROR" "Malformed JSON${MSG:+ in $MSG}" ;;
+    esac
+}
+
 ##############################################################################
 ##                                                                          ##
 ##  Main                                                                    ##
@@ -37,8 +48,11 @@ check_note_id() {
 NOTE_ID="$1";            check_note_id "$NOTE_ID"
 FILE="$NOTE_DIR/$NOTE_ID";
 
-read DATA <"$FILE" \
-    || reply "404 Not Found" "Failed to read data"
+read DATA <"$FILE" || {
+    [ -e "$FILE" ] || reply "404 Not Found" "Missing file"
+    [ -r "$FILE" ] || reply "403 Forbidden" "File read protected"
+}
+check_json "$DATA" "500 Internal Server Error" "file"
 
 reply "200 OK"
 echo "$DATA"
