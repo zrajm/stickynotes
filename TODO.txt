@@ -30,6 +30,10 @@
 
   Should automatically do long pulling from server.
 * TODO Right-click for color change
+* TODO BUGFIX: Place cursor anywhere in text
+  Currently cursor can only be placed at beginning of text inside the stickies,
+  this is caused by the jQuery UI 'draggable' effect somehow. Will probably
+  have to reimplement the draggable (and drop jQuery UI?) to fix this.
 * SOMEDAY/MAYBE
 ** TODO Resizeable(?)
 * FINISHED
