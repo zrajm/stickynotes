@@ -112,12 +112,14 @@ function drawNote(id) {
             "class"          : "note",
             "contenteditable": "",
             "html"           : noteData.text,
+            "spellcheck"     : false,
             "id"             : id
         }).css({
             "left"      : noteData.x,
             "top"       : noteData.y,
             "z-index"   : noteData.z,
             "background": noteData.color,
+            "transform" : "rotate(" + rnd(-10, 10) + "deg)",
             "-webkit-transform": "rotate(" + rnd(-10, 10) + "deg)"
         }).appendTo("main").draggable({
             "containment": "parent",
