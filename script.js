@@ -61,8 +61,8 @@ function poll() {
 // After note has been dragged, push new data to server.
 function stopDragging(_, ui) {
     var id = ui.helper.prop("id");
-    noteCache[id].x = ui.offset.left;          // x
-    noteCache[id].y = ui.offset.top;           // y
+    noteCache[id].x = Math.round(ui.offset.left);
+    noteCache[id].y = Math.round(ui.offset.top);
     pushNote(id);
 }
 
