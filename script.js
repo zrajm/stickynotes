@@ -111,7 +111,7 @@ function drawNote(id) {
         noteElement = $("<div>", {
             "class"          : "note",
             "contenteditable": "",
-            "text"           : noteData.text,
+            "html"           : noteData.text,
             "id"             : id
         }).css({
             "left"      : noteData.x,
