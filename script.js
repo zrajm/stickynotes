@@ -77,11 +77,7 @@ poll();
 
 // Update note with newest note data from server.
 function pullNote(id, success) {
-    success = success || function () { };
-    $.ajax({
-        url: "do.cgi?" + id,
-        success: success,
-    });
+    $.ajax({"url": "get.cgi?" + id, "type": "GET", "success": success});
     showNotesData();
 }
 
