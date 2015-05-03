@@ -2,7 +2,6 @@
 
 * TODO Creating notes
 * TODO Deleting notes
-* TODO jslint
 * TODO Better separation between server & notes
   The parsing of server response, and putting into note cache should not be
   inside the note cache module.
@@ -60,3 +59,5 @@
    CLOSED: [2015-05-03 Sun 17:35]
 ** DONE Note cache should automatically do long poll from server
    CLOSED: [2015-05-03 Sun 17:35]
+** DONE Code should pass (old) jslint
+   CLOSED: [2015-05-03 Sun 20:47]
