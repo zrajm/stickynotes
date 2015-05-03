@@ -9,12 +9,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 function makeNotes(opt) {
-    var push     = (opt.push     || function () {}),
-        pull     = (opt.pull     || function () {}),
-        afterSet = (opt.afterSet || function () {});
+    var noteCache, notes;
+    opt = {
+        afterSet: opt.afterSet || function () {},
+        pull    : opt.pull     || function () {},
+        push    : opt.push     || function () {},
+    };
 
     // Cache of notes. Data is filled in by server.
-    var noteCache = {
+    noteCache = {
         "x5z4leeuflzvvx6rbg3bsosa1vbcsor": {},
         "xgaj3zygtrcnmibf24asiu7rd7k3xr": {},
         "954plbdew1urf6rj04ueprxdz7d5cdi": {},
@@ -26,52 +29,48 @@ function makeNotes(opt) {
         });
     }
 
-    return {
+    notes = {
         getZMax: function () {
-            var that = this, zMax = 0;
-            that.forEach(function (id) {
+            var id, zMax = 0, that = this;
+            this.forEach(function (id) {
                 var z = that.get(id, "z");
                 if (z > zMax) { zMax = z; }
             });
             return zMax;
         },
-        getJSON: function (id) {
-            if (id) {
-                return JSON.stringify(noteCache[id]);
-            } else {
-                return JSON.stringify(noteCache, null, 4);
-            }
+        json: function (id) {
+            return id
+                ? JSON.stringify(noteCache[id])
+                : JSON.stringify(noteCache, null, 4);
         },
         get: function (id, prop) {
             return noteCache[id][prop];
         },
-        set: function (id, values, redraw) {
+        set: function (id, values) {
             set(id, values);
-            afterSet(id);
+            opt.afterSet(id);
+            return this;
         },
-        // Set values and push them to server.
-        push: function (id, values) {
+        push: function (id, values) {          // Set & push to server.
             set(id, values);
-            push(id, this.getJSON(id));
+            opt.push(id, this.json(id));
+            return this;
         },
         forEach: function (callback) {
             Object.keys(noteCache).forEach(callback);
+            return this;
         },
-        init: function () {
-            var that = this;
-            that.forEach(function (id) {
-                pull(id, function (noteData) {
-                    that.set(id, noteData);
-                });
-            });
-        }
     };
+    notes.forEach(function (id) {              // Load notes from server.
+        opt.pull(id, function (noteData) { notes.set(id, noteData); });
+    });
+    return notes;
 }
 
 var notes = makeNotes({
     afterSet: function (id) {
         drawNote(id);
-        $('#dump').html('<pre>' + notes.getJSON() + '</pre>');
+        $('#dump').html('<pre>' + notes.json() + '</pre>');
     },
     pull: function (id, setter) {
         $.ajax({ url: "get.cgi?" + id, type: "GET", success: setter });
@@ -80,7 +79,6 @@ var notes = makeNotes({
         $.ajax({ url: "put.cgi?" + id, type: "PUT", data: json });
     }
 });
-notes.init();
 
 function putNoteOnTop(id) {
     var z       = notes.get(id, "z"),
@@ -101,6 +99,7 @@ function rnd(min, max) {
 ////////////////////////////////////////////////////////////////////////////////
 
 // Poll updates from server.
+// Refactor: Ignore events caused by ourself.
 function poll() {
     $.ajax({
         url: "poll.cgi",
