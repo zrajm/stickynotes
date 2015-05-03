@@ -9,7 +9,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 function makeNotes(opt) {
-    var push = opt.push || function () {};
+    var push     = (opt.push     || function () {}),
+        pull     = (opt.pull     || function () {}),
+        afterSet = (opt.afterSet || function () {});
 
     // Cache of notes. Data is filled in by server.
     var noteCache = {
@@ -18,7 +20,21 @@ function makeNotes(opt) {
         "954plbdew1urf6rj04ueprxdz7d5cdi": {},
     };
 
+    function set(id, values) {
+        $.each(values, function (prop, value) {
+            noteCache[id][prop] = value;
+        });
+    }
+
     return {
+        getZMax: function () {
+            var that = this, zMax = 0;
+            that.forEach(function (id) {
+                var z = that.get(id, "z");
+                if (z > zMax) { zMax = z; }
+            });
+            return zMax;
+        },
         getJSON: function (id) {
             if (id) {
                 return JSON.stringify(noteCache[id]);
@@ -29,47 +45,51 @@ function makeNotes(opt) {
         get: function (id, prop) {
             return noteCache[id][prop];
         },
-        set: function (id, values) {
-            $.each(values, function (prop, value) {
-                noteCache[id][prop] = value;
-            });
+        set: function (id, values, redraw) {
+            set(id, values);
+            afterSet(id);
         },
         // Set values and push them to server.
         push: function (id, values) {
-            this.set(id, values);
+            set(id, values);
             push(id, this.getJSON(id));
         },
         forEach: function (callback) {
             Object.keys(noteCache).forEach(callback);
+        },
+        init: function () {
+            var that = this;
+            that.forEach(function (id) {
+                pull(id, function (noteData) {
+                    that.set(id, noteData);
+                });
+            });
         }
     };
 }
 
 var notes = makeNotes({
-    push: function (id, noteJSON) {
-        $.ajax({ url: "put.cgi?" + id, type: "PUT", data: noteJSON });
-        showNotesData();
+    afterSet: function (id) {
+        drawNote(id);
+        $('#dump').html('<pre>' + notes.getJSON() + '</pre>');
+    },
+    pull: function (id, setter) {
+        $.ajax({ url: "get.cgi?" + id, type: "GET", success: setter });
+    },
+    push: function (id, json) {
+        $.ajax({ url: "put.cgi?" + id, type: "PUT", data: json });
     }
 });
-
-
-// Fetch notedata from server, redraw screen.
-maxZ = 0;
-notes.forEach(function(id) {
-    pullNote(id, function (noteData) {
-        if (maxZ < noteData.z) { maxZ = noteData.z; }
-        notes.set(id, noteData);
-        drawNote(id);
-    });
-});
+notes.init();
 
 function putNoteOnTop(id) {
-    var z = notes.get(id, "z"), element = $("#" + id);
-    if (z < maxZ) {
-        maxZ += 1;
-        notes.push(id, { z: maxZ });
-        element.zIndex(maxZ);
-        showNotesData();
+    var z       = notes.get(id, "z"),
+        zMax    = notes.getZMax(),
+        element = $("#" + id);
+    if (z < zMax) {
+        zMax += 1;
+        notes.push(id, { z: zMax });
+        element.zIndex(zMax);
     }
 }
 
@@ -88,7 +108,6 @@ function poll() {
             var id;
             for (id in noteUpdates) {
                 notes.set(id, noteUpdates[id]);
-                drawNote(id);
             }
         },
         complete: poll
@@ -104,10 +123,6 @@ function stopDragging(_, ui) {
     });
 }
 
-function showNotesData() {
-    $('#dump').html('<pre>' + notes.getJSON() + '</pre>');
-}
-
 var main = $("main");
 $("main").on("input", function (event) {
     var element = $(event.target),
@@ -117,17 +132,10 @@ $("main").on("input", function (event) {
 });
 poll();
 
-// Update note with newest note data from server.
-function pullNote(id, success) {
-    $.ajax({"url": "get.cgi?" + id, "type": "GET", "success": success});
-    showNotesData();
-}
-
 // Update note with specified ID, or create it, if it doesn't exist.
 function drawNote(id) {
     var noteElement = $('#' + id);
     if (noteElement.length > 0) {
-        console.log("MODIFYING " + id);
         noteElement.css({
             "left"      : notes.get(id, "x"),
             "top"       : notes.get(id, "y"),
@@ -135,7 +143,6 @@ function drawNote(id) {
             "background": notes.get(id, "color")
         }).html(notes.get(id, "text"));
     } else {
-        console.log("CREATING " + id);
         noteElement = $("<div>", {
             "class"          : "note",
             "contenteditable": "",
@@ -154,7 +161,6 @@ function drawNote(id) {
             "stop"       : stopDragging,
         }).mousedown(function () { putNoteOnTop(id); });
     }
-    showNotesData();
 }
 
 //[eof]
