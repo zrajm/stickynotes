@@ -16,19 +16,11 @@
 * TODO Creating notes
 * TODO Deleting notes
 * TODO Proper, random sticky IDs
-* TODO Note cache should be a module
+* TODO Note cache should automatically push to server
+* TODO Note cache should automatically do long poll from server
+* TODO Note cache should automatically update dump in background
   A hook/callback to be invoked whenever the note cache contents change (for
   updating the JSON in the background), and maybe initialize push to server.
-
-  get(id) -- Return one note.
-
-  set() -- Should keep track of changed values, so that push() can push the
-  smallest possible changeset.
-
-  push() -- Should push all notes that have been updated (no id should have to
-  be provided).
-
-  Should automatically do long pulling from server.
 * TODO Right-click for color change
 * TODO BUGFIX: Place cursor anywhere in text
   Currently cursor can only be placed at beginning of text inside the stickies,
@@ -58,3 +50,5 @@
    where XX is a random number between 5.0 and -5.0
 ** DONE Favicon
    CLOSED: [2015-05-03 Sun 00:37]
+** DONE Note cache should be a module
+   CLOSED: [2015-05-03 Sun 02:23]
