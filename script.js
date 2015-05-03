@@ -112,6 +112,36 @@
         }
     }
 
+    var menu = (function () {
+        var menu = $("#menu"), deleteChoice = $("#del"), selected;
+        function closeMenu() {
+            if (selected) {
+                selected.removeClass("selected");
+                selected = null;
+            }
+            menu.hide();
+        }
+        function openMenu(event) {
+            var element = $(event.target);
+            if (element.closest(menu).length) {    // on menu (abort)
+                return false;
+            }
+            closeMenu();
+            if (element.closest(".note").length) { // on note
+                selected = element.addClass("selected");
+                deleteChoice.show();
+            } else {                               // on background
+                deleteChoice.hide();
+            }
+            menu.show().css({                      // place menu under mouse
+                left: event.pageX - (menu.outerWidth()  / 2),
+                top : event.pageY - (menu.outerHeight() / 2)
+            });
+            return false;
+        }
+        return { close: closeMenu, open: openMenu }
+    }());
+
     // Update note with specified ID, or create it, if it doesn't exist.
     function drawNote(id, notes) {
         var noteElement = $('#' + id);
@@ -172,7 +202,9 @@
             id      = element.prop("id"),
             value   = element.html();
         notes.push(id, { text: value });
-    });
+    }).
+        on("contextmenu", menu.open).
+        on("click", menu.close);
 
 }());
 
