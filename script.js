@@ -8,7 +8,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-var notes = (function () {
+function makeNotes(opt) {
+    var push = opt.push || function () {};
+
     // Cache of notes. Data is filled in by server.
     var noteCache = {
         "x5z4leeuflzvvx6rbg3bsosa1vbcsor": {},
@@ -17,25 +19,39 @@ var notes = (function () {
     };
 
     return {
-        getJSON: function () {
-            return JSON.stringify(noteCache, null, 4);
-        },
-        getNoteJSON: function (id) {
-            return JSON.stringify(noteCache[id]);
+        getJSON: function (id) {
+            if (id) {
+                return JSON.stringify(noteCache[id]);
+            } else {
+                return JSON.stringify(noteCache, null, 4);
+            }
         },
         get: function (id, prop) {
-            return (prop === undefined) ? noteCache[id] : noteCache[id][prop];
+            return noteCache[id][prop];
         },
         set: function (id, values) {
             $.each(values, function (prop, value) {
                 noteCache[id][prop] = value;
             });
         },
+        // Set values and push them to server.
+        push: function (id, values) {
+            this.set(id, values);
+            push(id, this.getJSON(id));
+        },
         forEach: function (callback) {
             Object.keys(noteCache).forEach(callback);
         }
     };
-}());
+}
+
+var notes = makeNotes({
+    push: function (id, noteJSON) {
+        $.ajax({ url: "put.cgi?" + id, type: "PUT", data: noteJSON });
+        showNotesData();
+    }
+});
+
 
 // Fetch notedata from server, redraw screen.
 maxZ = 0;
@@ -51,8 +67,7 @@ function putNoteOnTop(id) {
     var z = notes.get(id, "z"), element = $("#" + id);
     if (z < maxZ) {
         maxZ += 1;
-        notes.set(id, { z: maxZ });
-        pushNote(id);
+        notes.push(id, { z: maxZ });
         element.zIndex(maxZ);
         showNotesData();
     }
@@ -83,11 +98,10 @@ function poll() {
 // After note has been dragged, push new data to server.
 function stopDragging(_, ui) {
     var id = ui.helper.prop("id");
-    notes.set(id, {
+    notes.push(id, {
         x: Math.round(ui.offset.left),
         y: Math.round(ui.offset.top)
     });
-    pushNote(id);
 }
 
 function showNotesData() {
@@ -99,24 +113,13 @@ $("main").on("input", function (event) {
     var element = $(event.target),
         id      = element.prop("id"),
         value   = element.html();
-    notes.set(id, { text: value });
-    pushNote(id);
+    notes.push(id, { text: value });
 });
 poll();
 
 // Update note with newest note data from server.
 function pullNote(id, success) {
     $.ajax({"url": "get.cgi?" + id, "type": "GET", "success": success});
-    showNotesData();
-}
-
-// Push one note to the server.
-function pushNote(id) {
-    $.ajax({
-        "url" : "put.cgi?" + id,
-        "type": "PUT",
-        "data": notes.getNoteJSON(id)
-    });
     showNotesData();
 }
 
