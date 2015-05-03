@@ -12,6 +12,7 @@ function makeNotes(opt) {
     var noteCache, notes;
     opt = {
         afterSet: opt.afterSet || function () {},
+        poll    : opt.poll     || function () {},
         pull    : opt.pull     || function () {},
         push    : opt.push     || function () {},
     };
@@ -26,6 +27,12 @@ function makeNotes(opt) {
     function set(id, values) {
         $.each(values, function (prop, value) {
             noteCache[id][prop] = value;
+        });
+    }
+    function processPollResponse(noteUpdates) {
+        // Refactor: Ignore events caused by self.
+        $.each(noteUpdates, function (id, values) {
+            notes.set(id, values);
         });
     }
 
@@ -61,9 +68,10 @@ function makeNotes(opt) {
             return this;
         },
     };
-    notes.forEach(function (id) {              // Load notes from server.
+    notes.forEach(function (id) {              // Pull notes from server.
         opt.pull(id, function (noteData) { notes.set(id, noteData); });
     });
+    opt.poll(processPollResponse, opt.poll);   // Initiate long polling.
     return notes;
 }
 
@@ -71,6 +79,11 @@ var notes = makeNotes({
     afterSet: function (id) {
         drawNote(id);
         $('#dump').html('<pre>' + notes.json() + '</pre>');
+    },
+    poll: function (processResponse, poller) {
+        $.ajax({ url: "poll.cgi", success: processResponse,
+             complete: function () { poller(processResponse, poller); }
+        });
     },
     pull: function (id, setter) {
         $.ajax({ url: "get.cgi?" + id, type: "GET", success: setter });
@@ -98,21 +111,6 @@ function rnd(min, max) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// Poll updates from server.
-// Refactor: Ignore events caused by ourself.
-function poll() {
-    $.ajax({
-        url: "poll.cgi",
-        success: function (noteUpdates) {
-            var id;
-            for (id in noteUpdates) {
-                notes.set(id, noteUpdates[id]);
-            }
-        },
-        complete: poll
-    });
-}
-
 // After note has been dragged, push new data to server.
 function stopDragging(_, ui) {
     var id = ui.helper.prop("id");
@@ -129,7 +127,6 @@ $("main").on("input", function (event) {
         value   = element.html();
     notes.push(id, { text: value });
 });
-poll();
 
 // Update note with specified ID, or create it, if it doesn't exist.
 function drawNote(id) {
