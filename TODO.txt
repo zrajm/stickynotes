@@ -26,25 +26,25 @@
   clients and enjoy a "resolution free" screen, without the client having to
   tell the server which resolution its running at any point.
 * TODO BUGFIX: Place cursor anywhere in text
-  Currently cursor can only be placed at beginning of text inside the stickies,
-  this is caused by the jQuery UI 'draggable' effect somehow. Will probably
-  have to reimplement the draggable (and drop jQuery UI?) to fix this.
+  Currently cursor can only be placed at beginning of text inside the
+  stickynotes, this is caused by the jQuery UI 'draggable' effect somehow. Will
+  probably have to reimplement the draggable (and drop jQuery UI?) to fix this.
 * SOMEDAY/MAYBE
 ** TODO Resizeable(?)
 * FINISHED
-** DONE Load stickies on startup
+** DONE Load stickynotes on startup
    CLOSED: [2015-05-02 Sat 00:05]
-** DONE Store/load coords of stickies
+** DONE Store/load coords of stickynotes
    CLOSED: [2015-05-02 Sat 00:05]
 ** DONE Not move outside screen
    CLOSED: [2015-05-02 Sat 00:05]
-** DONE Update stickies on remote change
+** DONE Update stickynotes on remote change
    CLOSED: [2015-05-02 Sat 15:17]
 ** DONE Dragging should only affect dragged item
    CLOSED: [2015-05-02 Sat 21:24]
    jQuery UI 'stack'ing shouldn't be used when dragging, as this forces updates
-   of all stickies.
-** DONE Slightly rotated stickies
+   of all stickynotes.
+** DONE Slightly rotated stickynotes
    CLOSED: [2015-05-02 Sat 22:21]
    Do this randomly on reload.
 
@@ -75,5 +75,5 @@
    CLOSED: [2015-05-04 Mon 03:38]
 ** DONE Deleting notes
    CLOSED: [2015-05-04 Mon 06:39]
-** DONE Load list of stickies from server too
+** DONE Load list of stickynotes from server too
    CLOSED: [2015-05-04 Mon 08:35]
