@@ -65,3 +65,5 @@
    CLOSED: [2015-05-04 Mon 00:22]
 ** DONE Right-click for color change
    CLOSED: [2015-05-04 Mon 03:37]
+** DONE Right-click to create new note
+   CLOSED: [2015-05-04 Mon 03:38]

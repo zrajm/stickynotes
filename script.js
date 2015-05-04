@@ -1,11 +1,11 @@
 /*global $, jQuery */
 
-// var rand = function() {
-//     return Math.random().toString(36).substr(2);
-// };
-// var token = function() {
-//     return rand() + rand(); // to make it longer
-// };
+var rand = function() {
+    return Math.random().toString(36).substr(2);
+};
+var token = function() {
+    return rand() + rand(); // to make it longer
+};
 
 // Lika .hasClass() allows multiple classes. Returns true if at least one class
 // matches.
@@ -43,6 +43,7 @@ jQuery.fn.hasAnyClass = function (selector) {
         };
 
         function set(id, values) {
+            noteCache[id] = noteCache[id] || {};
             $.each(values, function (prop, value) {
                 noteCache[id][prop] = value;
             });
@@ -140,13 +141,23 @@ jQuery.fn.hasAnyClass = function (selector) {
             var id, color, element = (event ? $(event.target) : null);
             if (event && element.closest(menuElement).length) {// on menu
                 if (element.hasColorClass()) {
+                    color = element.prop("class");
                     if (selected) {            // change existing note
-                        id    = selected.prop("id");
-                        color = element.prop("class");
+                        id = selected.prop("id");
                         selected.setColorClass(color);
                         notes.push(id, { color: color });
                     } else {                   // create new note
-                        console.log("create new note");
+                        // Refactor: Check that id does not already exist.
+                        var id = token();
+                        notes.push(id, {
+                            // Refactor: Width/height should come from CSS rule.
+                            x: (event.pageX - 75),
+                            y: (event.pageY - 75),
+                            z: (notes.getZMax() + 1),
+                            text: "",
+                            color: color
+                        });
+                        drawNote(id, notes).focus();
                     }
                 }
             }
@@ -212,6 +223,7 @@ jQuery.fn.hasAnyClass = function (selector) {
                 }).
                 mousedown(function () { putNoteOnTop(id); });
         }
+        return noteElement;
     }
 
     //////////////////////////////////////////////////////////////////////////
