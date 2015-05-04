@@ -1,13 +1,13 @@
 -*- org -*-
 
-* TODO Creating notes
-* TODO Deleting notes
-* TODO Better separation between server & notes
-  The parsing of server response, and putting into note cache should not be
-  inside the note cache module.
+* TODO Load list of stickies from server too
 * TODO Sessions
   Should automatically be created when invoked. Use hashlocation to initiate
   one.
+* TODO Merge delete.cgi, get.cgi and put.cgi into one script
+* TODO Better separation between server & notes
+  The parsing of server response, and putting into note cache should not be
+  inside the note cache module.
 * TODO Sync full state at time intervals
   Should check occasionally that everything is up-to-date with server, so that
   if notes get fucked up they auto-adjust after some time interval. (A checksum
@@ -16,7 +16,6 @@
   Make it transparent & disable draggability?
 * TODO Lock note that is being moved by other client
   Make it transparent & disable draggability?
-* TODO Load list of stickies from server too
 * TODO Proper, random sticky IDs
 * TODO No events on notes, instead capture them on <main>
 * TODO BUGFIX: Place cursor anywhere in text
@@ -65,5 +64,7 @@
    CLOSED: [2015-05-04 Mon 00:22]
 ** DONE Right-click for color change
    CLOSED: [2015-05-04 Mon 03:37]
-** DONE Right-click to create new note
+** DONE Creating notes
    CLOSED: [2015-05-04 Mon 03:38]
+** DONE Deleting notes
+   CLOSED: [2015-05-04 Mon 06:39]

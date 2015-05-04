@@ -34,25 +34,6 @@ check_note_id() {
     esac
 }
 
-# Very simplistic check. Only look to see that JSON data starts and ends with
-# curly braces.
-check_json() {
-    local JSON="$1" ERROR="$2" MSG="$3"
-    case "$JSON" in
-        "{"*"}") : ;;
-        "") reply "$ERROR"   "Missing data${MSG:+ in $MSG}" ;;
-        *)  reply "$ERROR" "Malformed JSON${MSG:+ in $MSG}" ;;
-    esac
-}
-
-write_data() {
-    local ID="$1" DATA="$2"
-    local FILE="$NOTE_DIR/$NOTE_ID";
-    read PREVIOUS <"$FILE"                     # (one line of file)
-    [ "$DATA" = "$PREVIOUS" ] && return 0      # do nada if data is unchanged
-    echo "$DATA" >"$FILE"
-}
-
 ##############################################################################
 ##                                                                          ##
 ##  Main                                                                    ##
@@ -60,9 +41,9 @@ write_data() {
 ##############################################################################
 
 NOTE_ID="$1"; check_note_id "$NOTE_ID"
-[ ! -t 0 ] && read JSON; check_json "$JSON" "400 Bad Request" "request body"
-write_data "$NOTE_ID" "$JSON" \
-    || reply "403 Forbidden" "File write protected"
+FILE="$NOTE_DIR/$NOTE_ID";
+
+rm -f "$FILE" || reply "403 Forbidden" "Failed to delete file"
 reply "204 No Content"
 
 #[eof]

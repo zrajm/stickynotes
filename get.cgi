@@ -51,7 +51,7 @@ check_json() {
 ##                                                                          ##
 ##############################################################################
 
-NOTE_ID="$1";            check_note_id "$NOTE_ID"
+NOTE_ID="$1"; check_note_id "$NOTE_ID"
 FILE="$NOTE_DIR/$NOTE_ID";
 
 read DATA <"$FILE" || {

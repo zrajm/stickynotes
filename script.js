@@ -30,6 +30,7 @@ jQuery.fn.hasAnyClass = function (selector) {
         var noteCache, self;
         opt = {
             afterSet: opt.afterSet || function () { return; },
+            delete  : opt.delete   || function () { return; },
             poll    : opt.poll     || function () { return; },
             pull    : opt.pull     || function () { return; },
             push    : opt.push     || function () { return; }
@@ -70,14 +71,23 @@ jQuery.fn.hasAnyClass = function (selector) {
                         JSON.stringify(noteCache, null, 4);
             },
             get: function (id, prop) {
-                return noteCache[id][prop];
+                return prop ? noteCache[id][prop] : noteCache[id];
             },
             set: function (id, values) {
+                if (!values) { return self.delete(id); }
                 set(id, values);
                 opt.afterSet(id);
                 return this;
             },
+            // Erase note in note cache and remove it in GUI.
+            delete: function (id) {
+                delete noteCache[id];
+                opt.delete(id);
+                opt.afterSet(id);
+                return this;
+            },
             push: function (id, values) {          // Set & push to server.
+                if (!values) { return self.delete(id); }
                 set(id, values);
                 opt.push(id, this.json(id));
                 return this;
@@ -159,6 +169,10 @@ jQuery.fn.hasAnyClass = function (selector) {
                         });
                         drawNote(id, notes).focus();
                     }
+                } else if (element.closest(deleteChoice).length) {
+                    id = selected.prop("id");
+                    console.log('deleting ' + id);
+                    notes.delete(id);
                 }
             }
             if (selected) {
@@ -190,31 +204,31 @@ jQuery.fn.hasAnyClass = function (selector) {
 
     // Update note with specified ID, or create it, if it doesn't exist.
     function drawNote(id, notes) {
-        var noteElement = $('#' + id);
-        if (noteElement.length > 0) {
+        var angle, note = notes.get(id), noteElement = $('#' + id);
+        if (!note) {                           // note has been deleted
+            return noteElement.remove();       //   remove any note in GUI
+        }
+        if (noteElement.length > 0) {          // modify existing note in GUI
             noteElement.
-                setColorClass(notes.get(id, "color")).
-                css({
-                    "left"      : notes.get(id, "x"),
-                    "top"       : notes.get(id, "y"),
-                    "z-index"   : notes.get(id, "z")
-                }).
-                html(notes.get(id, "text"));
-        } else {
+                setColorClass(note.color).
+                css({ left: note.x, top: note.y, zIndex: note.z }).
+                html(note.text);
+        } else {                               // create new note in GUI
+            angle = rnd(-10, 10) + "deg";
             noteElement = $("<div>", {
                 "class"          : "note",
                 "contenteditable": "",
-                "html"           : notes.get(id, "text"),
+                "html"           : note.text,
                 "spellcheck"     : false,
                 "id"             : id
             }).
-                setColorClass(notes.get(id, "color")).
+                setColorClass(note.color).
                 css({
-                    "left"      : notes.get(id, "x"),
-                    "top"       : notes.get(id, "y"),
-                    "z-index"   : notes.get(id, "z"),
-                    "transform" : "rotate(" + rnd(-10, 10) + "deg)",
-                    "-webkit-transform": "rotate(" + rnd(-10, 10) + "deg)"
+                    left           : note.x,
+                    top            : note.y,
+                    zIndex         : note.z,
+                    transform      : "rotate(" + angle + ")",
+                    WebkitTransform: "rotate(" + angle + ")"
                 }).
                 appendTo("main").
                 draggable({
@@ -234,6 +248,12 @@ jQuery.fn.hasAnyClass = function (selector) {
         afterSet: function (id) {
             drawNote(id, notes);
             $('#dump').html('<pre>' + notes.json() + '</pre>');
+        },
+        // Refactor: Ajax calls here should use promises instead of args.
+        // (Use .done()/.fail()/.always() instead of success/error/complete.)
+        // Refactor: Polling trouble should be shown in the GUI.
+        delete: function (id) {
+            $.ajax({ url: "delete.cgi?" + id, type: "DELETE" });
         },
         poll: function (processResponse, poller) {
             $.ajax({
