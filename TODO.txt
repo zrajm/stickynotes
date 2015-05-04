@@ -18,7 +18,6 @@
   Make it transparent & disable draggability?
 * TODO Load list of stickies from server too
 * TODO Proper, random sticky IDs
-* TODO Right-click for color change
 * TODO No events on notes, instead capture them on <main>
 * TODO BUGFIX: Place cursor anywhere in text
   Currently cursor can only be placed at beginning of text inside the stickies,
@@ -64,3 +63,5 @@
    CLOSED: [2015-05-03 Sun 20:47]
 ** DONE Context menu
    CLOSED: [2015-05-04 Mon 00:22]
+** DONE Right-click for color change
+   CLOSED: [2015-05-04 Mon 03:37]

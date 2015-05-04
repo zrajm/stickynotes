@@ -1,4 +1,4 @@
-/*global $ */
+/*global $, jQuery */
 
 // var rand = function() {
 //     return Math.random().toString(36).substr(2);
@@ -7,9 +7,20 @@
 //     return rand() + rand(); // to make it longer
 // };
 
+// Lika .hasClass() allows multiple classes. Returns true if at least one class
+// matches.
+jQuery.fn.hasAnyClass = function (selector) {
+    'use strict';
+    var i, classes = selector.split(" "), l = classes.length;
+    for (i = 0; i < l; i += 1) {
+        if (this.hasClass(classes[i])) { return true; }
+    }
+    return false;
+};
+
 (function () {
     'use strict';
-    var notes;
+    var notes, menu;
 
     //////////////////////////////////////////////////////////////////////////
     //
@@ -112,46 +123,72 @@
         }
     }
 
-    var menu = (function () {
-        var menu = $("#menu"), deleteChoice = $("#del"), selected;
-        function closeMenu() {
+    // jQuery extensions for handling color classes.
+    (function () {
+        var colorClasses = "yellow orange red green teal violet";
+        jQuery.fn.hasColorClass = function () {
+            return this.hasAnyClass(colorClasses);
+        };
+        jQuery.fn.setColorClass = function (color) {
+            return this.removeClass(colorClasses).addClass(color);
+        };
+    }());
+
+    menu = (function () {
+        var menuElement = $("#menu"), deleteChoice = $("#del"), selected;
+        function closeMenu(event) {
+            var id, color, element = (event ? $(event.target) : null);
+            if (event && element.closest(menuElement).length) {// on menu
+                if (element.hasColorClass()) {
+                    if (selected) {            // change existing note
+                        id    = selected.prop("id");
+                        color = element.prop("class");
+                        selected.setColorClass(color);
+                        notes.push(id, { color: color });
+                    } else {                   // create new note
+                        console.log("create new note");
+                    }
+                }
+            }
             if (selected) {
                 selected.removeClass("selected");
                 selected = null;
             }
-            menu.hide();
+            menuElement.hide();
         }
         function openMenu(event) {
             var element = $(event.target);
-            if (element.closest(menu).length) {    // on menu (abort)
+            if (element.closest(menuElement).length) {// on menu (abort)
                 return false;
             }
             closeMenu();
-            if (element.closest(".note").length) { // on note
+            if (element.closest(".note").length) {    // on sticky note
                 selected = element.addClass("selected");
                 deleteChoice.show();
-            } else {                               // on background
+            } else {                                  // on background
                 deleteChoice.hide();
             }
-            menu.show().css({                      // place menu under mouse
-                left: event.pageX - (menu.outerWidth()  / 2),
-                top : event.pageY - (menu.outerHeight() / 2)
+            menuElement.show().css({                  // place menu under mouse
+                left: event.pageX - (menuElement.outerWidth()  / 2),
+                top : event.pageY - (menuElement.outerHeight() / 2)
             });
             return false;
         }
-        return { close: closeMenu, open: openMenu }
+        return { close: closeMenu, open: openMenu };
     }());
 
     // Update note with specified ID, or create it, if it doesn't exist.
     function drawNote(id, notes) {
         var noteElement = $('#' + id);
         if (noteElement.length > 0) {
-            noteElement.css({
-                "left"      : notes.get(id, "x"),
-                "top"       : notes.get(id, "y"),
-                "z-index"   : notes.get(id, "z"),
-                "background": notes.get(id, "color")
-            }).html(notes.get(id, "text"));
+            noteElement.
+                setColorClass(notes.get(id, "color")).
+                css({
+                    "left"      : notes.get(id, "x"),
+                    "top"       : notes.get(id, "y"),
+                    "z-index"   : notes.get(id, "z")
+                }).
+                html(notes.get(id, "text"));
         } else {
             noteElement = $("<div>", {
                 "class"          : "note",
@@ -159,17 +196,21 @@
                 "html"           : notes.get(id, "text"),
                 "spellcheck"     : false,
                 "id"             : id
-            }).css({
-                "left"      : notes.get(id, "x"),
-                "top"       : notes.get(id, "y"),
-                "z-index"   : notes.get(id, "z"),
-                "background": notes.get(id, "color"),
-                "transform" : "rotate(" + rnd(-10, 10) + "deg)",
-                "-webkit-transform": "rotate(" + rnd(-10, 10) + "deg)"
-            }).appendTo("main").draggable({
-                "containment": "parent",
-                "stop"       : stopDragging
-            }).mousedown(function () { putNoteOnTop(id); });
+            }).
+                setColorClass(notes.get(id, "color")).
+                css({
+                    "left"      : notes.get(id, "x"),
+                    "top"       : notes.get(id, "y"),
+                    "z-index"   : notes.get(id, "z"),
+                    "transform" : "rotate(" + rnd(-10, 10) + "deg)",
+                    "-webkit-transform": "rotate(" + rnd(-10, 10) + "deg)"
+                }).
+                appendTo("main").
+                draggable({
+                    "containment": "parent",
+                    "stop"       : stopDragging
+                }).
+                mousedown(function () { putNoteOnTop(id); });
         }
     }
 

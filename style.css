@@ -48,16 +48,20 @@ main {
     outline: 2px solid rgba(0,0,0,.25);
 }
 
-.c1 { background: #F7C808; }
-.c2 { background: #E98813; }
-.c3 { background: #D2315D; }
-.c4 { background: #88C134; }
-.c5 { background: #22B5BF; }
-.c6 { background: #8767A6; }
+/*
+ * Useful when finding names for colors:
+ * http://www.color-blindness.com/color-name-hue/
+ * http://chir.ag/projects/name-that-color/
+ */
+.yellow { background: #F7C808; }
+.orange { background: #E98813; }
+.red    { background: #D2315D; }
+.green  { background: #88C134; }
+.teal   { background: #22B5BF; }
+.violet { background: #8767A6; }
 
 .note {
     padding: 0.5em;
-    background: #ddd;
     box-shadow: 0px 0px 3px rgba(0, 0, 0, .8);
     width: 150px;
     min-height: 150px;
