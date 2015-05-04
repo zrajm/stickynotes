@@ -9,6 +9,8 @@
   ping?)
 * TODO Elliminate memory leaks
 * TODO Merge delete.cgi, get.cgi and put.cgi into one script
+* TODO Add some credits on screen
+  Link to github + my name + license
 * TODO Better separation between server & notes
   The parsing of server response, and putting into note cache should not be
   inside the note cache module.
@@ -18,6 +20,11 @@
   Make it transparent & disable draggability?
 * TODO Proper, random sticky IDs
 * TODO No events on notes, instead capture them on <main>
+* TODO Normalize screen positions
+  If the screen consists of "virtual pixels" etc. 10.000x10.00 pixels, which we
+  rescale all coordinates to internally, we could then do the same on all
+  clients and enjoy a "resolution free" screen, without the client having to
+  tell the server which resolution its running at any point.
 * TODO BUGFIX: Place cursor anywhere in text
   Currently cursor can only be placed at beginning of text inside the stickies,
   this is caused by the jQuery UI 'draggable' effect somehow. Will probably

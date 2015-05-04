@@ -37,7 +37,11 @@ check_json() {
 ##                                                                          ##
 ##############################################################################
 
-NOTE_ID="$(inotifywait notes/ -qre close_write,delete --format=%f)"
+NOTE_ID="$(inotifywait notes/ -qre close_write,delete --format=%f)" || {
+    which inotifywait >/dev/null \
+        || reply "500 Internal Server Error" "inotifywait is not installed"
+    reply "500 Internal Server Error" "inotifywait returned non-zero"
+}
 FILE="$NOTE_DIR/$NOTE_ID";
 
 if [ -e "$FILE" ]; then
