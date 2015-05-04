@@ -31,17 +31,14 @@ jQuery.fn.hasAnyClass = function (selector) {
         opt = {
             afterSet: opt.afterSet || function () { return; },
             delete  : opt.delete   || function () { return; },
+            list    : opt.list     || function () { return; },
             poll    : opt.poll     || function () { return; },
             pull    : opt.pull     || function () { return; },
             push    : opt.push     || function () { return; }
         };
 
         // Cache of notes. Data is filled in by server.
-        noteCache = {
-            "x5z4leeuflzvvx6rbg3bsosa1vbcsor": {},
-            "xgaj3zygtrcnmibf24asiu7rd7k3xr": {},
-            "954plbdew1urf6rj04ueprxdz7d5cdi": {}
-        };
+        noteCache = {};
 
         function set(id, values) {
             noteCache[id] = noteCache[id] || {};
@@ -92,15 +89,22 @@ jQuery.fn.hasAnyClass = function (selector) {
                 opt.push(id, this.json(id));
                 return this;
             },
+            forEachRemote: function (callback) {
+                opt.list(function (data) {
+                    // Refactor: Throw error if no '.list' property found.
+                    data.list.forEach(callback);
+                });
+                return this;
+            },
             forEach: function (callback) {
                 Object.keys(noteCache).forEach(callback);
                 return this;
             }
         };
-        self.forEach(function (id) {              // Pull notes from server.
+        self.forEachRemote(function (id) {      // Pull notes from server.
             opt.pull(id, function (noteData) { self.set(id, noteData); });
         });
-        opt.poll(processPollResponse, opt.poll);   // Initiate long polling.
+        opt.poll(processPollResponse, opt.poll);// Initiate long polling.
         return self;
     }
 
@@ -171,7 +175,6 @@ jQuery.fn.hasAnyClass = function (selector) {
                     }
                 } else if (element.closest(deleteChoice).length) {
                     id = selected.prop("id");
-                    console.log('deleting ' + id);
                     notes.delete(id);
                 }
             }
@@ -254,6 +257,9 @@ jQuery.fn.hasAnyClass = function (selector) {
         // Refactor: Polling trouble should be shown in the GUI.
         delete: function (id) {
             $.ajax({ url: "delete.cgi?" + id, type: "DELETE" });
+        },
+        list: function (processor) {
+            $.ajax({ url: "list.cgi", type: "GET", success: processor });
         },
         poll: function (processResponse, poller) {
             $.ajax({
