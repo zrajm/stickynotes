@@ -49,7 +49,7 @@ jQuery.fn.hasAnyClass = function (selector) {
         function processPollResponse(noteUpdates) {
             $.each(noteUpdates, function (id, values) {
                 // Ignore events caused by self.
-                if (values.session !== session) {
+                if (values.by !== session) {
                     self.set(id, values);
                 }
             });
@@ -87,7 +87,7 @@ jQuery.fn.hasAnyClass = function (selector) {
             },
             push: function (id, values) {          // Set & push to server.
                 if (!values) { return self.delete(id); }
-                values.session = session;
+                values.by = session;
                 set(id, values);
                 opt.push(id, this.json(id));
                 return this;
