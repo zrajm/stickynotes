@@ -7,6 +7,19 @@
   Should check occasionally that everything is up-to-date with server, so that
   if notes get fucked up they auto-adjust after some time interval. (A checksum
   ping?)
+* TODO Send initial state in one chunk
+  Even with fifty notes, each using up 5KB this would only mean a 250KB body in
+  the response, which would be acceptable.
+
+  Typical note sizes are ~100B (note lack of "K" there!) in which case 50 notes
+  (a pretty extreme case!) is about *5KB* is size!
+
+  "Keyframes" could also be sent this way.
+* TODO inotifywait issue?
+  It seems that stickynotes sometimes leave inotifywait processes behind.
+  (Maybe on reload?) Could this be remedied? (Maybe by running with
+  `inotifywait &` then trapping signals and `wait`ing, and killing it hard
+  stdin disappears/SIGHUP is received?
 * TODO Elliminate memory leaks
 * TODO Merge delete.cgi, get.cgi and put.cgi into one script
 * TODO Add some credits on screen
@@ -29,6 +42,8 @@
   Currently cursor can only be placed at beginning of text inside the
   stickynotes, this is caused by the jQuery UI 'draggable' effect somehow. Will
   probably have to reimplement the draggable (and drop jQuery UI?) to fix this.
+* TODO Handle '504 (Gateway Timeout)'
+  in GET http://localhost/stickynotes/poll.cgi
 * SOMEDAY/MAYBE
 ** TODO Resizeable(?)
 * FINISHED
@@ -77,3 +92,13 @@
    CLOSED: [2015-05-04 Mon 06:39]
 ** DONE Load list of stickynotes from server too
    CLOSED: [2015-05-04 Mon 08:35]
+** DONE Ignore events caused by self
+   CLOSED: [2015-05-05 tis 19:42]
+   When a note is updated, an event is pushed to the server. This event is then
+   returned to the client in the poll, and applied again. Each client should put
+   a session ID into the data passed to the server, and ignore all polled events
+   which has its own session ID.
+
+   FIXES BUG: Poll updating caused the cursor repeatedly to move to first
+   position in text when editing a note (this as the note was redrawn upon
+   receiving the poll of its modification from the server).

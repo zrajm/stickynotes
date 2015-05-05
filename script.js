@@ -27,7 +27,7 @@ jQuery.fn.hasAnyClass = function (selector) {
     //  Note Module
     //
     function makeNotes(opt) {
-        var noteCache, self;
+        var noteCache, self, session = token();
         opt = {
             afterSet: opt.afterSet || function () { return; },
             delete  : opt.delete   || function () { return; },
@@ -47,9 +47,11 @@ jQuery.fn.hasAnyClass = function (selector) {
             });
         }
         function processPollResponse(noteUpdates) {
-            // Refactor: Ignore events caused by self.
             $.each(noteUpdates, function (id, values) {
-                self.set(id, values);
+                // Ignore events caused by self.
+                if (values.session !== session) {
+                    self.set(id, values);
+                }
             });
         }
 
@@ -85,6 +87,7 @@ jQuery.fn.hasAnyClass = function (selector) {
             },
             push: function (id, values) {          // Set & push to server.
                 if (!values) { return self.delete(id); }
+                values.session = session;
                 set(id, values);
                 opt.push(id, this.json(id));
                 return this;
