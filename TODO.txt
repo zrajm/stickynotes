@@ -3,7 +3,6 @@
 * TODO Boards
   Should automatically be created when invoked. Use hashlocation to initiate
   one.
-* TODO FIX deleting notes are not synced!
 * TODO Right-clink in menu should give browser-native menu
 * TODO Scale coordinates to normalized 10000x10000 pixel grid
   All coordinates should be recalculated to standard pixel grid, so that we get
@@ -35,7 +34,6 @@
   stdin disappears/SIGHUP is received?
 * TODO Warn when too many tabs are open
 * TODO Eliminate memory leaks
-* TODO Merge delete.cgi, get.cgi and put.cgi into one script
 * TODO Add some credits on screen
   Link to github + my name + license
 * TODO Better separation between server & notes
@@ -165,3 +163,5 @@
 ** DONE Rename data dir `notes` -> `data`
    CLOSED: [2015-05-06 ons 20:07]
    Don't forget to update README and other references to it.
+** DONE BUG: Deleting a note does not propagate!
+   CLOSED: [2015-05-06 ons 20:45]

@@ -48,9 +48,10 @@ jQuery.fn.hasAnyClass = function (selector) {
         }
         function processPollResponse(noteUpdates) {
             $.each(noteUpdates, function (id, values) {
-                // Ignore events caused by self.
-                if (values.by !== session) {
-                    self.set(id, values);
+                if (!values) {                 // no values = always delete
+                    self.delete(id);
+                } else if (values.by !== session) {
+                    self.set(id, values);      // only set if from non-self
                 }
             });
         }
@@ -73,7 +74,6 @@ jQuery.fn.hasAnyClass = function (selector) {
                 return prop ? noteCache[id][prop] : noteCache[id];
             },
             set: function (id, values) {
-                if (!values) { return self.delete(id); }
                 set(id, values);
                 opt.afterSet(id);
                 return this;
@@ -86,7 +86,6 @@ jQuery.fn.hasAnyClass = function (selector) {
                 return this;
             },
             push: function (id, values) {          // Set & push to server.
-                if (!values) { return self.delete(id); }
                 values.by = session;
                 set(id, values);
                 opt.push(id, this.json(id));
