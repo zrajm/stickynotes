@@ -3,6 +3,11 @@
 * TODO Boards
   Should automatically be created when invoked. Use hashlocation to initiate
   one.
+* TODO FIX deleting notes are not synced!
+* TODO Right-clink in menu should give browser-native menu
+* TODO Scale coordinates to normalized 10000x10000 pixel grid
+  All coordinates should be recalculated to standard pixel grid, so that we get
+  the same experience on different resolutions.
 * TODO Sync full state at time intervals
   Should we pass along a checksum of the current state with every server GET
   and/or POLL? The server could then check it against its state, and send back
@@ -58,10 +63,17 @@
 * TODO Give warning when polls are dropped? / >1 tab is open?
 * TODO Allow multiple tabs
   One tab should do the long polling from the server, and share its result
-  using localStorage. See
-  also :http://meta.stackexchange.com/questions/85034/multiple-chat-tabs
+  using localStorage. See also:
+  http://meta.stackexchange.com/questions/85034/multiple-chat-tabs
 * TODO Reimplement server CGI scripts in compiled language
   For better performance. Use Go, maybe?
+* TODO Rename data dir `notes` -> `data`
+  Don't forget to update README and other references to it.
+* TODO Have one single URL for get/put/delete API calls
+  It's very nice and easy to get quick overview with each of these put into
+  separate files, but if all CGI files are put into a single dir, then an
+  `index.cgi` to that directory could simply source the other files as needed
+  (after first sourcing a file with the shell functions they all share).
 * SOMEDAY/MAYBE
 ** TODO Resizeable(?)
 * FINISHED
@@ -146,3 +158,6 @@
    [2]: http://www.stevesouders.com/blog/2008/03/20/roundup-on-parallel-connections/
 
    CLOSED: [2015-05-06 Wed 02:04]
+** DONE Move CGI files and favicons into subdirs
+   CLOSED: [2015-05-06 ons 19:48]
+   To make the work dir less cluttered.

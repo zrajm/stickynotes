@@ -260,26 +260,26 @@ jQuery.fn.hasAnyClass = function (selector) {
         // (Use .done()/.fail()/.always() instead of success/error/complete.)
         // Refactor: Polling trouble should be shown in the GUI.
         delete: function (id) {
-            $.ajax({ url: "delete.cgi?" + id, type: "DELETE" });
+            $.ajax({ url: "api/delete.cgi?" + id, type: "DELETE" });
         },
         list: function (processor) {
-            $.ajax({ url: "list.cgi", type: "GET", success: processor });
+            $.ajax({ url: "api/list.cgi", type: "GET", success: processor });
         },
         poll: function (processResponse, poller, session) {
             $.ajax({
                 // Refactor: Make something that works on FF (other?) too.
                 // 'session' arg is a dummy which makes long polling work in
                 // Chrome (but not FF). See 'Polling broken' in TODO.txt
-                url: "poll.cgi?" + session,
+                url: "api/poll.cgi?" + session,
                 success: processResponse,
                 complete: function () { poller(processResponse, poller, session); }
             });
         },
         pull: function (id, setter) {
-            $.ajax({ url: "get.cgi?" + id, type: "GET", success: setter });
+            $.ajax({ url: "api/get.cgi?" + id, type: "GET", success: setter });
         },
         push: function (id, json) {
-            $.ajax({ url: "put.cgi?" + id, type: "PUT", data: json });
+            $.ajax({ url: "api/put.cgi?" + id, type: "PUT", data: json });
         }
     });
 
