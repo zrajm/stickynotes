@@ -107,7 +107,8 @@ jQuery.fn.hasAnyClass = function (selector) {
         self.forEachRemote(function (id) {      // Pull notes from server.
             opt.pull(id, function (noteData) { self.set(id, noteData); });
         });
-        opt.poll(processPollResponse, opt.poll);// Initiate long polling.
+        // Initiate long polling.
+        opt.poll(processPollResponse, opt.poll, session);
         return self;
     }
 
@@ -264,11 +265,14 @@ jQuery.fn.hasAnyClass = function (selector) {
         list: function (processor) {
             $.ajax({ url: "list.cgi", type: "GET", success: processor });
         },
-        poll: function (processResponse, poller) {
+        poll: function (processResponse, poller, session) {
             $.ajax({
-                url: "poll.cgi",
+                // Refactor: Make something that works on FF (other?) too.
+                // 'session' arg is a dummy which makes long polling work in
+                // Chrome (but not FF). See 'Polling broken' in TODO.txt
+                url: "poll.cgi?" + session,
                 success: processResponse,
-                complete: function () { poller(processResponse, poller); }
+                complete: function () { poller(processResponse, poller, session); }
             });
         },
         pull: function (id, setter) {

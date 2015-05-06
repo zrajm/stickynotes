@@ -1,9 +1,17 @@
 -*- org -*-
 
-* TODO Sessions
+* TODO Boards
   Should automatically be created when invoked. Use hashlocation to initiate
   one.
 * TODO Sync full state at time intervals
+  Should we pass along a checksum of the current state with every server GET
+  and/or POLL? The server could then check it against its state, and send back
+  a full dump (instead of a partial one) if the checksum differs from the
+  checksum of the current state.
+
+  NOTE: This could go south quickly if the checksum differs because the user
+  changed notes around on this end.
+
   Should check occasionally that everything is up-to-date with server, so that
   if notes get fucked up they auto-adjust after some time interval. (A checksum
   ping?)
@@ -20,7 +28,8 @@
   (Maybe on reload?) Could this be remedied? (Maybe by running with
   `inotifywait &` then trapping signals and `wait`ing, and killing it hard
   stdin disappears/SIGHUP is received?
-* TODO Elliminate memory leaks
+* TODO Warn when too many tabs are open
+* TODO Eliminate memory leaks
 * TODO Merge delete.cgi, get.cgi and put.cgi into one script
 * TODO Add some credits on screen
   Link to github + my name + license
@@ -44,6 +53,15 @@
   probably have to reimplement the draggable (and drop jQuery UI?) to fix this.
 * TODO Handle '504 (Gateway Timeout)'
   in GET http://localhost/stickynotes/poll.cgi
+* TODO Warn user that multiple tabs may not work
+  Polling reach alternating tabs in Firefox,
+* TODO Give warning when polls are dropped? / >1 tab is open?
+* TODO Allow multiple tabs
+  One tab should do the long polling from the server, and share its result
+  using localStorage. See
+  also :http://meta.stackexchange.com/questions/85034/multiple-chat-tabs
+* TODO Reimplement server CGI scripts in compiled language
+  For better performance. Use Go, maybe?
 * SOMEDAY/MAYBE
 ** TODO Resizeable(?)
 * FINISHED
@@ -102,3 +120,29 @@
    FIXES BUG: Poll updating caused the cursor repeatedly to move to first
    position in text when editing a note (this as the note was redrawn upon
    receiving the poll of its modification from the server).
+** DONE BUG: Polling broken if >1 tab open (FIXED ON CHROMIUM)
+   Bug shows up on Chromium 37 and Firefox 36.0.1 (but does not affect Chromium
+   25). Bug FIXED ON CHROMIUM by supplying a dummy argument to the `poll.cgi`.
+
+   When there are more than one stickynote tab open, polled events to not reach
+   all of them, instead the first polled event goes to the first tab, the
+   second event goes to the second tab, etc until the last tab is reached,
+   whereupon it starts over with the first tab.
+
+   When googling the problem I found this[1] thread asking why Stackoverflow
+   have written their web chat so that only one tab does the polling,
+   regardless of how many tabs are open (this tab then share its findings by
+   mean of `localStorage`). That thread also referenced an article called
+   "Roundup on Parallel Connections" with more info.
+
+   On Chromium 37 one can simply add a dummy argument, or a hash location to
+   the URL in order to fool this mechanism. This trick does not work on
+   Firefox, however, and a comment on previously mentioned Stackoverflow
+   thread[1] seems to suggest that it might actually consider only the domain
+   name (something which Facebook has solved by adding random subdomain names
+   for their polling).
+
+   [1]: http://meta.stackexchange.com/questions/85034/multiple-chat-tabs
+   [2]: http://www.stevesouders.com/blog/2008/03/20/roundup-on-parallel-connections/
+
+   CLOSED: [2015-05-06 Wed 02:04]
