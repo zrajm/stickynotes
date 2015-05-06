@@ -67,13 +67,14 @@
   http://meta.stackexchange.com/questions/85034/multiple-chat-tabs
 * TODO Reimplement server CGI scripts in compiled language
   For better performance. Use Go, maybe?
-* TODO Rename data dir `notes` -> `data`
-  Don't forget to update README and other references to it.
 * TODO Have one single URL for get/put/delete API calls
   It's very nice and easy to get quick overview with each of these put into
   separate files, but if all CGI files are put into a single dir, then an
   `index.cgi` to that directory could simply source the other files as needed
   (after first sourcing a file with the shell functions they all share).
+
+  (This may require adding `index.cgi` to the list of index files in the Apache
+  config.)
 * SOMEDAY/MAYBE
 ** TODO Resizeable(?)
 * FINISHED
@@ -161,3 +162,6 @@
 ** DONE Move CGI files and favicons into subdirs
    CLOSED: [2015-05-06 ons 19:48]
    To make the work dir less cluttered.
+** DONE Rename data dir `notes` -> `data`
+   CLOSED: [2015-05-06 ons 20:07]
+   Don't forget to update README and other references to it.

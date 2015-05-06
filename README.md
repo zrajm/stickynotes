@@ -28,10 +28,10 @@ you'll need is some a of web server and Dash.
 
 Installing
 ==========
-You need is a web server configured to run the CGI scripts, and with
-permissions set so that it may write files to stickynotes data directory
-(`notes/`). On a Ubuntu/Debian machine the following commands (or something
-similar) should get you going.
+All you need is a web server configured to run CGI scripts, and with
+permissions set so that it may write to the stickynotes data directory. On an
+Ubuntu/Debian machine the following commands (or something quite similar)
+should get you going.
 
 First install Apache and enable the CGI module:
 
@@ -47,13 +47,13 @@ following options in the Apache config (the config file itself can be found in
     AddHandler cgi-script .cgi
 
 Restart Apache, add yourself to the Apache's group (`www-data`) and change the
-permissions of stickynotes data directory (`notes/`) so that Apache may write
+permissions of stickynotes data directory (`data/`) so that Apache may write
 stuff there.
 
     sudo service apache2 restart
     sudo adduser $USER www-data
     newgrp www-data
-    chown -R :www-data notes
-    chmod -R g+w notes
+    chgrp -R www-data data/
+    chmod -R g+w data
 
 [eof]

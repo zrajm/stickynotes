@@ -1,7 +1,7 @@
 #!/bin/dash
 #-*- sh -*-
 
-NOTE_DIR="notes"
+NOTE_DIR="../data"
 
 ##############################################################################
 ##                                                                          ##
@@ -37,7 +37,7 @@ check_json() {
 ##                                                                          ##
 ##############################################################################
 
-NOTE_ID="$(inotifywait notes/ -qre close_write,delete --format=%f)" || {
+NOTE_ID="$(inotifywait "$NOTE_DIR" -qre close_write,delete --format=%f)" || {
     which inotifywait >/dev/null \
         || reply "500 Internal Server Error" "inotifywait is not installed"
     reply "500 Internal Server Error" "inotifywait returned non-zero"

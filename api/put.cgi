@@ -1,7 +1,7 @@
 #!/bin/dash
 # -*- sh -*-
 
-NOTE_DIR="notes"
+NOTE_DIR="../data"
 
 # This script modifies the strings passed with the HTTP status code in order to
 # give more intelligeble output in the Chrome console. As far as I know this is
