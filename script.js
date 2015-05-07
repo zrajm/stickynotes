@@ -107,7 +107,7 @@ jQuery.fn.hasAnyClass = function (selector) {
             },
             push: function (id, values) {          // Set & push to server.
                 values.by = session;
-                set(id, values);
+                self.set(id, values);
                 opt.push(id, this.json(id));
                 return this;
             },
