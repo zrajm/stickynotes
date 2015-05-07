@@ -3,7 +3,6 @@
 * TODO Boards
   Should automatically be created when invoked. Use hashlocation to initiate
   one.
-* TODO Right-clink in menu should give browser-native menu
 * TODO Scale coordinates to normalized 10000x10000 pixel grid
   All coordinates should be recalculated to standard pixel grid, so that we get
   the same experience on different resolutions.
@@ -189,3 +188,5 @@
 ** DONE BUGFIX: Background data dump doesn't always update
    CLOSED: [2015-05-07 tor 09:38]
    Local changes aren't noticed any more.
+** DONE Right-clink in menu should give browser-native menu
+   CLOSED: [2015-05-07 tor 09:48]

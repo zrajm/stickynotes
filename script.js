@@ -204,7 +204,7 @@ jQuery.fn.hasAnyClass = function (selector) {
         function openMenu(event) {
             var element = $(event.target);
             if (element.closest(menuElement).length) {// on menu (abort)
-                return false;
+                return true;
             }
             closeMenu();
             if (element.closest(".note").length) {    // on sticky note
