@@ -47,7 +47,7 @@ jQuery.fn.hasAnyClass = function (selector) {
     //  Note Module
     //
     function makeNotes(opt) {
-        var noteCache, self, session = random132BitString();
+        var self, noteCache = {}, session = random132BitString();
         opt = {
             afterSet: opt.afterSet || function () { return; },
             delete  : opt.delete   || function () { return; },
@@ -57,15 +57,6 @@ jQuery.fn.hasAnyClass = function (selector) {
             push    : opt.push     || function () { return; }
         };
 
-        // Cache of notes. Data is filled in by server.
-        noteCache = {};
-
-        function set(id, values) {
-            noteCache[id] = noteCache[id] || {};
-            $.each(values, function (prop, value) {
-                noteCache[id][prop] = value;
-            });
-        }
         function processPollResponse(noteUpdates) {
             $.each(noteUpdates, function (id, values) {
                 if (!values) {                 // no values = always delete
@@ -94,7 +85,10 @@ jQuery.fn.hasAnyClass = function (selector) {
                 return prop ? noteCache[id][prop] : noteCache[id];
             },
             set: function (id, values) {
-                set(id, values);
+                noteCache[id] = noteCache[id] || {};
+                $.each(values, function (prop, value) {
+                    noteCache[id][prop] = value;
+                });
                 opt.afterSet(id);
                 return this;
             },
