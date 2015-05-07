@@ -3,6 +3,8 @@
 * TODO Boards
   Should automatically be created when invoked. Use hashlocation to initiate
   one.
+* TODO BUGFIX: Background datadump doesn't always update
+  It doesn't notice local changes any more.
 * TODO Right-clink in menu should give browser-native menu
 * TODO Scale coordinates to normalized 10000x10000 pixel grid
   All coordinates should be recalculated to standard pixel grid, so that we get
@@ -43,13 +45,15 @@
   Make it transparent & disable draggability?
 * TODO Lock note that is being moved by other client
   Make it transparent & disable draggability?
-* TODO Proper, random sticky IDs
 * TODO No events on notes, instead capture them on <main>
 * TODO Normalize screen positions
   If the screen consists of "virtual pixels" etc. 10.000x10.00 pixels, which we
   rescale all coordinates to internally, we could then do the same on all
   clients and enjoy a "resolution free" screen, without the client having to
   tell the server which resolution its running at any point.
+* TODO BUGFIX: Text cursor on note shouldn't move when note is moved
+  Regardless of whether this happens because of server event, or because user
+  moved note locally.
 * TODO BUGFIX: Place cursor anywhere in text
   Currently cursor can only be placed at beginning of text inside the
   stickynotes, this is caused by the jQuery UI 'draggable' effect somehow. Will
@@ -165,3 +169,22 @@
    Don't forget to update README and other references to it.
 ** DONE BUG: Deleting a note does not propagate!
    CLOSED: [2015-05-06 ons 20:45]
+** DONE Cryptographically strong randomness in IDs
+   CLOSED: [2015-05-07 tor 09:11]
+   Session IDs, note IDs etc. should all use cryptographic strength randomness
+   to avoid collisions (since we don't want to do collision detection).
+
+   Will use 22 base64 encoded characters, giving 132 bit entropy. This should be
+   more than enough. 128 bits gives 0.000,000,000,000,000,001% risk of collision
+   if there are 26 billion notes (according to table on Wikipedia) -- that
+   sounds like a pretty acceptable number -- but we might as well round the
+   number off upwards to the nearest base64 number that can be expressed without
+   padding. This gets us 22 characters = 132 bit entropy.
+
+   Well use `window.crypto` (or `window.msCrypto`) and fall back on
+   `Math.random()` (the only non-stoneage browser to use `Math.random()` will be
+   MSIE10, and possibly Safari on Android -- and the latter *might* actually
+   have a cryptographically strong `Math.random()`!).
+
+   As long as the number of clients with bad randomness are kept low it'll
+   prolly not be a problem (is my guess).

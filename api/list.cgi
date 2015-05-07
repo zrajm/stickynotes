@@ -41,7 +41,7 @@ cd "$NOTE_DIR" 2>/dev/null || {
 
 for FILE in *; do
     case "$FILE" in
-        *[!a-z0-9]*) : ;;
+        *[!a-zA-Z0-9_-]*) : ;;
         *) DATA="$DATA\"$FILE\","
     esac
 done

@@ -1,11 +1,31 @@
 /*global $, jQuery */
 
-var rand = function() {
-    return Math.random().toString(36).substr(2);
-};
-var token = function() {
-    return rand() + rand(); // to make it longer
-};
+// Return a Base64 encoded random string with 22 chars (132 bit). Uses stong
+// randomness everywhere possible. Uses RCF4648 version of Base64 encoding
+// (file and URL safe) and never includes padding. Characters used are
+// [a-zA-z0-9_-] (= 6 bit per character).
+var random132BitString = (function() {
+    var crypto = (window.crypto || window.msCrypto),
+        transl = { "+": "-", "/": "_" };
+    return function () {
+        // 17 bytes = 136 bit (cut down to 132 bit in the end).
+        var string, bytes = new Uint8Array(17);
+        // Build array of byte numbers.
+        if (crypto && crypto.getRandomValues) {// crypto interface
+            crypto.getRandomValues(bytes);     //   good random bytes
+        } else {
+            for (i = 0; i < 17; i += 1) {      // builtin (insecure)
+                bytes[i] = Math.floor(Math.random() * 256);
+            }
+        }
+        string = String.fromCharCode.apply(null, bytes);
+        return btoa(string).                   // base64 encode
+            slice(0, 22).                      //   22 base64 chars = 132 bit
+            replace(/[+\/]/g, function (c) {   //   file & URL safe encoding
+                return transl[c];
+            });
+    };
+})();
 
 // Lika .hasClass() allows multiple classes. Returns true if at least one class
 // matches.
@@ -27,7 +47,7 @@ jQuery.fn.hasAnyClass = function (selector) {
     //  Note Module
     //
     function makeNotes(opt) {
-        var noteCache, self, session = token();
+        var noteCache, self, session = random132BitString();
         opt = {
             afterSet: opt.afterSet || function () { return; },
             delete  : opt.delete   || function () { return; },
@@ -165,7 +185,7 @@ jQuery.fn.hasAnyClass = function (selector) {
                         notes.push(id, { color: color });
                     } else {                   // create new note
                         // Refactor: Check that id does not already exist.
-                        var id = token();
+                        var id = random132BitString();
                         notes.push(id, {
                             // Refactor: Width/height should come from CSS rule.
                             x: (event.pageX - 75),

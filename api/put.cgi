@@ -29,8 +29,8 @@ reply() {
 check_note_id() {
     local NOTE_ID="$1"
     case "$NOTE_ID" in
-        "")          reply "400 Bad Request" "Missing note ID" ;;
-        *[!a-z0-9]*) reply "400 Bad Request" "Malformed note ID" ;;
+        "")               reply "400 Bad Request" "Missing note ID" ;;
+        *[!a-zA-Z0-9_-]*) reply "400 Bad Request" "Malformed note ID" ;;
     esac
 }
 
