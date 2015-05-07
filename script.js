@@ -46,7 +46,7 @@ jQuery.fn.hasAnyClass = function (selector) {
     //
     //  Note Module
     //
-    function makeNotes(opt) {
+    function makeNoteCache(opt) {
         var self, noteCache = {}, session = random132BitString();
         opt = {
             afterSet: opt.afterSet || function () { return; },
@@ -264,7 +264,7 @@ jQuery.fn.hasAnyClass = function (selector) {
     //
     //  Main
     //
-    notes = makeNotes({
+    notes = makeNoteCache({
         afterSet: function (id) {
             drawNote(id, notes);
             $('#dump').html('<pre>' + notes.json() + '</pre>');

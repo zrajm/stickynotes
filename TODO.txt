@@ -38,8 +38,9 @@
 * TODO Add some credits on screen
   Link to github + my name + license
 * TODO Refactor: Better separation between server & notes
-  The parsing of server response, and putting into note cache should not be
-  inside the note cache module.
+  makeNoteCache() should not contain *any* network logic -- that should all be
+  handled with callbacks. The callbacks should probably in turn be bundled into
+  an API module, which contains nothing *but* network stuff.
 * TODO Lock note for which server connection has been lost
   Make it transparent & disable draggability?
 * TODO Lock note that is being moved by other client
@@ -50,6 +51,12 @@
   rescale all coordinates to internally, we could then do the same on all
   clients and enjoy a "resolution free" screen, without the client having to
   tell the server which resolution its running at any point.
+* TODO BUGFIX: Typing backwards in Firefox
+  For each keypress, when writing a note, the cursor is moved to the beginning
+  of the text effectively making text entered backwards. It works just fine in
+  Chrome, however.
+
+  Redraw notes on poll() & get(); redraw JSON dump in background on each set().
 * TODO BUGFIX: Text cursor on note shouldn't move when note is moved
   Regardless of whether this happens because of server event, or because user
   moved note locally.
@@ -84,6 +91,10 @@
 
   (This may require adding `index.cgi` to the list of index files in the Apache
   config.)
+* TODO Use true Promise for AJAX calls?
+  This technique was mentioned in the article Daniel linked to (which also
+  pointed out that the jQuery "promise" in not a proper promise. What's the
+  benefit here? Should it be used?
 * SOMEDAY/MAYBE
 ** TODO Resizeable(?)
 * FINISHED
