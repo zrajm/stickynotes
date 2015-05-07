@@ -3,6 +3,7 @@
 * TODO Boards
   Should automatically be created when invoked. Use hashlocation to initiate
   one.
+* TODO Give user feedback about server errors
 * TODO Scale coordinates to normalized 10000x10000 pixel grid
   All coordinates should be recalculated to standard pixel grid, so that we get
   the same experience on different resolutions.
@@ -31,18 +32,19 @@
   (Maybe on reload?) Could this be remedied? (Maybe by running with
   `inotifywait &` then trapping signals and `wait`ing, and killing it hard
   stdin disappears/SIGHUP is received?
-* TODO Warn when too many tabs are open
+
+  Are these left whenever we get a '504 (Gateway Timeout)' in `poll.cgi`?
 * TODO Eliminate memory leaks
 * TODO Add some credits on screen
   Link to github + my name + license
-* TODO Better separation between server & notes
+* TODO Refactor: Better separation between server & notes
   The parsing of server response, and putting into note cache should not be
   inside the note cache module.
 * TODO Lock note for which server connection has been lost
   Make it transparent & disable draggability?
 * TODO Lock note that is being moved by other client
   Make it transparent & disable draggability?
-* TODO No events on notes, instead capture them on <main>
+* TODO Don't capture events on note element, capture them on <main>
 * TODO Normalize screen positions
   If the screen consists of "virtual pixels" etc. 10.000x10.00 pixels, which we
   rescale all coordinates to internally, we could then do the same on all
@@ -55,11 +57,19 @@
   Currently cursor can only be placed at beginning of text inside the
   stickynotes, this is caused by the jQuery UI 'draggable' effect somehow. Will
   probably have to reimplement the draggable (and drop jQuery UI?) to fix this.
-* TODO Handle '504 (Gateway Timeout)'
-  in GET http://localhost/stickynotes/poll.cgi
 * TODO Warn user that multiple tabs may not work
   Polling reach alternating tabs in Firefox,
 * TODO Give warning when polls are dropped? / >1 tab is open?
+  If browser maxes out on server connections (which it might do when there are
+  several tabs open) then polled event will not reach all tabs, but instead
+  reach alternating tabs. This is bad, as not all tabs will receive all server
+  events. (This is a problem on Firefox, on Chrome it's been worked around with
+  a cache-killing extra argument to `poll.cgi`.)
+
+  Either only one tab should make a server connection, and communicate with the
+  other tabs by means of localStorage. Or the server could enumerate each
+  server response so that we can keep track of, and warn, when not every tab
+  gets all events.
 * TODO Allow multiple tabs
   One tab should do the long polling from the server, and share its result
   using localStorage. See also:
