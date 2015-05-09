@@ -216,3 +216,15 @@
    CLOSED: [2015-05-07 tor 09:48]
 ** DONE Check note ID length in the CGI scripts
    CLOSED: [2015-05-09 Sat 23:41]
+** DONE Added .json suffix to data files
+   CLOSED: [2015-05-10 Sun 00:21]
+   A suffix seems logical (since the files *are* in JSON format, after all),
+   but also helps since:
+
+   + `list.cgi` now only lists notes with a data file ending in .json, meaning
+     backup files and other files without the .json suffix won't get passed
+     along to the client.
+
+   + `put.cgi` (and `delete.cgi`) only writes (and deletes) files with a .json
+     prefix, limiting the any problem caused by an amok script (because of a
+     hacking or bug).

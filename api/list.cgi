@@ -39,7 +39,8 @@ cd "$NOTE_DIR" 2>/dev/null || {
     reply "500 Internal Server Error"
 }
 
-for FILE in *; do
+for FILE in ??????????????????????.json; do    # note ID = 22 characters
+    FILE="${FILE%.json}"
     case "$FILE" in
         *[!a-zA-Z0-9_-]*) : ;;
         *) DATA="$DATA\"$FILE\","

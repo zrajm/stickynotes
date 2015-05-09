@@ -42,7 +42,8 @@ NOTE_ID="$(inotifywait "$NOTE_DIR" -qre close_write,delete --format=%f)" || {
         || reply "500 Internal Server Error" "inotifywait is not installed"
     reply "500 Internal Server Error" "inotifywait returned non-zero"
 }
-FILE="$NOTE_DIR/$NOTE_ID";
+NOTE_ID="${NOTE_ID%.json}"
+FILE="$NOTE_DIR/$NOTE_ID.json"
 
 if [ -e "$FILE" ]; then
     read DATA <"$FILE" || {

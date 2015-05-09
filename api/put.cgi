@@ -31,7 +31,7 @@ check_note_id() {
     case "$NOTE_ID" in
         "")               reply "400 Bad Request" "Missing note ID" ;;
         *[!a-zA-Z0-9_-]*) reply "400 Bad Request" "Malformed note ID" ;;
-        ??????????????????????) : ;;
+        ??????????????????????) : ;;           # note ID = 22 characters
         *)                reply "400 Bad Request" "Note ID of bad length" ;;
     esac
 }
@@ -48,8 +48,7 @@ check_json() {
 }
 
 write_data() {
-    local ID="$1" DATA="$2"
-    local FILE="$NOTE_DIR/$NOTE_ID";
+    local FILE="$1" DATA="$2"
     read PREVIOUS <"$FILE"                     # (one line of file)
     [ "$DATA" = "$PREVIOUS" ] && return 0      # do nada if data is unchanged
     echo "$DATA" >"$FILE"
@@ -62,9 +61,10 @@ write_data() {
 ##############################################################################
 
 NOTE_ID="$1"; check_note_id "$NOTE_ID"
+FILE="$NOTE_DIR/$NOTE_ID.json"
+
 [ ! -t 0 ] && read JSON; check_json "$JSON" "400 Bad Request" "request body"
-write_data "$NOTE_ID" "$JSON" \
-    || reply "403 Forbidden" "File write protected"
+write_data "$FILE" "$JSON" || reply "403 Forbidden" "File write protected"
 reply "204 No Content"
 
 #[eof]

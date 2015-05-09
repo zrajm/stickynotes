@@ -31,7 +31,7 @@ check_note_id() {
     case "$NOTE_ID" in
         "")               reply "400 Bad Request" "Missing note ID" ;;
         *[!a-zA-Z0-9_-]*) reply "400 Bad Request" "Malformed note ID" ;;
-        ??????????????????????) : ;;
+        ??????????????????????) : ;;           # note ID = 22 characters
         *)                reply "400 Bad Request" "Note ID of bad length" ;;
     esac
 }
@@ -43,7 +43,7 @@ check_note_id() {
 ##############################################################################
 
 NOTE_ID="$1"; check_note_id "$NOTE_ID"
-FILE="$NOTE_DIR/$NOTE_ID";
+FILE="$NOTE_DIR/$NOTE_ID.json"
 
 rm -f "$FILE" || reply "403 Forbidden" "Failed to delete file"
 reply "204 No Content"
