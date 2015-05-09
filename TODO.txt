@@ -19,6 +19,9 @@
   Should check occasionally that everything is up-to-date with server, so that
   if notes get fucked up they auto-adjust after some time interval. (A checksum
   ping?)
+* TODO Check note ID length in the CGI scripts
+* TODO Server list in {id1:{},id2:{}} format instead of {list:[id1,id2]}
+  As a preparation for the 'Send initial state in one chunk'.
 * TODO Send initial state in one chunk
   Even with fifty notes, each using up 5KB this would only mean a 250KB body in
   the response, which would be acceptable.
@@ -26,7 +29,7 @@
   Typical note sizes are ~100B (note lack of "K" there!) in which case 50 notes
   (a pretty extreme case!) is about *5KB* is size!
 
-  "Keyframes" could also be sent this way.
+  "key frames" could also be sent this way.
 * TODO inotifywait issue?
   It seems that stickynotes sometimes leave inotifywait processes behind.
   (Maybe on reload?) Could this be remedied? (Maybe by running with
@@ -64,6 +67,7 @@
   Currently cursor can only be placed at beginning of text inside the
   stickynotes, this is caused by the jQuery UI 'draggable' effect somehow. Will
   probably have to reimplement the draggable (and drop jQuery UI?) to fix this.
+* TODO Put makeNoteCache() constructor in its own .js file
 * TODO Warn user that multiple tabs may not work
   Polling reach alternating tabs in Firefox,
 * TODO Give warning when polls are dropped? / >1 tab is open?
