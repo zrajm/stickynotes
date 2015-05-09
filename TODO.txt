@@ -19,7 +19,6 @@
   Should check occasionally that everything is up-to-date with server, so that
   if notes get fucked up they auto-adjust after some time interval. (A checksum
   ping?)
-* TODO Check note ID length in the CGI scripts
 * TODO Server list in {id1:{},id2:{}} format instead of {list:[id1,id2]}
   As a preparation for the 'Send initial state in one chunk'.
 * TODO Send initial state in one chunk
@@ -215,3 +214,5 @@
    Local changes aren't noticed any more.
 ** DONE Right-clink in menu should give browser-native menu
    CLOSED: [2015-05-07 tor 09:48]
+** DONE Check note ID length in the CGI scripts
+   CLOSED: [2015-05-09 Sat 23:41]

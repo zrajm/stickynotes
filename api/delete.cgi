@@ -31,6 +31,8 @@ check_note_id() {
     case "$NOTE_ID" in
         "")               reply "400 Bad Request" "Missing note ID" ;;
         *[!a-zA-Z0-9_-]*) reply "400 Bad Request" "Malformed note ID" ;;
+        ??????????????????????) : ;;
+        *)                reply "400 Bad Request" "Note ID of bad length" ;;
     esac
 }
 
