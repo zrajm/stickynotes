@@ -32,7 +32,7 @@ check_note_id() {
         "")               reply "400 Bad Request" "Missing note ID" ;;
         *[!a-zA-Z0-9_-]*) reply "400 Bad Request" "Malformed note ID" ;;
         ??????????????????????) : ;;           # note ID = 22 characters
-        *)                reply "400 Bad Request" "Note ID of bad length" ;;
+        *)                reply "400 Bad Request" "Note ID must be 22 chars" ;;
     esac
 }
 
@@ -47,6 +47,17 @@ check_json() {
     esac
 }
 
+# Usage: read_data VARIABLE FILE
+#
+# Reads first line of FILE into variable VARIABLE.
+read_data() {
+    read "$1" <"$2" || {
+        [ -e "$FILE" ] || reply "404 Not Found" "Missing file"
+        [ -r "$FILE" ] || reply "403 Forbidden" "File read protected"
+        reply "500 Internal Server Error" "Failed to read file"
+    }
+}
+
 ##############################################################################
 ##                                                                          ##
 ##  Main                                                                    ##
@@ -56,10 +67,7 @@ check_json() {
 NOTE_ID="$1"; check_note_id "$NOTE_ID"
 FILE="$NOTE_DIR/$NOTE_ID.json"
 
-read DATA <"$FILE" || {
-    [ -e "$FILE" ] || reply "404 Not Found" "Missing file"
-    [ -r "$FILE" ] || reply "403 Forbidden" "File read protected"
-}
+read_data DATA "$FILE" 2>/dev/null
 check_json "$DATA" "500 Internal Server Error" "file"
 
 reply "200 OK"
