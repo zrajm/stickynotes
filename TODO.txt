@@ -137,7 +137,7 @@
 ** DONE Load list of stickynotes from server too
    CLOSED: [2015-05-04 Mon 08:35]
 ** DONE Ignore events caused by self
-   CLOSED: [2015-05-05 tis 19:42]
+   CLOSED: [2015-05-05 Tue 19:42]
    When a note is updated, an event is pushed to the server. This event is then
    returned to the client in the poll, and applied again. Each client should put
    a session ID into the data passed to the server, and ignore all polled events
@@ -147,6 +147,7 @@
    position in text when editing a note (this as the note was redrawn upon
    receiving the poll of its modification from the server).
 ** DONE BUG: Polling broken if >1 tab open (FIXED ON CHROMIUM)
+   CLOSED: [2015-05-06 Wed 02:04]
    Bug shows up on Chromium 37 and Firefox 36.0.1 (but does not affect Chromium
    25). Bug FIXED ON CHROMIUM by supplying a dummy argument to the `poll.cgi`.
 
@@ -170,18 +171,16 @@
 
    [1]: http://meta.stackexchange.com/questions/85034/multiple-chat-tabs
    [2]: http://www.stevesouders.com/blog/2008/03/20/roundup-on-parallel-connections/
-
-   CLOSED: [2015-05-06 Wed 02:04]
 ** DONE Move CGI files and favicons into subdirs
-   CLOSED: [2015-05-06 ons 19:48]
+   CLOSED: [2015-05-06 Wed 19:48]
    To make the work dir less cluttered.
 ** DONE Rename data dir `notes` -> `data`
-   CLOSED: [2015-05-06 ons 20:07]
+   CLOSED: [2015-05-06 Wed 20:07]
    Don't forget to update README and other references to it.
 ** DONE BUG: Deleting a note does not propagate!
-   CLOSED: [2015-05-06 ons 20:45]
+   CLOSED: [2015-05-06 Wed 20:45]
 ** DONE Cryptographically strong randomness in IDs
-   CLOSED: [2015-05-07 tor 09:11]
+   CLOSED: [2015-05-07 Thu 09:11]
    Session IDs, note IDs etc. should all use cryptographic strength randomness
    to avoid collisions (since we don't want to do collision detection).
 
@@ -200,10 +199,10 @@
    As long as the number of clients with bad randomness are kept low it'll
    prolly not be a problem (is my guess).
 ** DONE BUGFIX: Background data dump doesn't always update
-   CLOSED: [2015-05-07 tor 09:38]
+   CLOSED: [2015-05-07 Thu 09:38]
    Local changes aren't noticed any more.
 ** DONE Right-clink in menu should give browser-native menu
-   CLOSED: [2015-05-07 tor 09:48]
+   CLOSED: [2015-05-07 Thu 09:48]
 ** DONE Check note ID length in the CGI scripts
    CLOSED: [2015-05-09 Sat 23:41]
 ** DONE Added .json suffix to data files
