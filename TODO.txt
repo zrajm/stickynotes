@@ -3,7 +3,6 @@
 * TODO Boards
   Should automatically be created when invoked. Use hashlocation to initiate
   one.
-* TODO Give user feedback about server errors
 * TODO Scale coordinates to normalized 10000x10000 pixel grid
   All coordinates should be recalculated to standard pixel grid, so that we get
   the same experience on different resolutions.
@@ -85,11 +84,26 @@
   (This may require adding `index.cgi` to the list of index files in the Apache
   config.)
 * TODO Use true Promise for AJAX calls?
-  This technique was mentioned in the article Daniel linked to (which also
-  pointed out that the jQuery "promise" in not a proper promise. What's the
-  benefit here? Should it be used?
+  This technique was mentioned in the article Daniel linked to[1] (which also
+  pointed out that the jQuery "promise" in not a proper promise. (Though in
+  some places on the internet it is said that jQuery >1.9 have real promises,
+  this is denied in other places[3]).
+
+  What's the benefit of Promises here? Should it be used?
+
+  [1]: http://www.html5rocks.com/en/tutorials/es6/promises/
+  "JavaScript Promises"
+
+  [2]: https://thewayofcode.wordpress.com/tag/jquery-deferred-broken/
+  "Javascript promises and why jQuery implementation is broken"
+
+  [3]: https://blog.domenic.me/youre-missing-the-point-of-promises/
+  "You're Missing the Point of Promises"
 * SOMEDAY/MAYBE
-** TODO Resizeable(?)
+** TODO Resizeable notes(?)
+** TODO Exponential backoff in case of server errors
+   Using this Promise retryer, or a derivate thereof?
+   https://gist.github.com/domenic/2936696
 * FINISHED
 ** DONE Load stickynotes on startup
    CLOSED: [2015-05-02 Sat 00:05]
@@ -229,3 +243,5 @@
    (a pretty extreme case!) is about *5KB* is size!
 
    "key frames" could also be sent this way.
+** DONE Give user feedback when server errors occurs
+   CLOSED: [2015-05-10 Sun 20:05]

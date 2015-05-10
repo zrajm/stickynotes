@@ -17,6 +17,23 @@ main {
     outline: 4px solid rgba(0,0,0,.5);
 }
 
+#error b { text-transform: capitalize; }
+#error {
+    display: none;
+    position: absolute;           /* position */
+    z-index: 999998;
+    bottom: 10px;
+    left: 10px;
+    font-size: 20px;              /* font & padding */
+    color: #fff;
+    padding: .25em .5em;
+    line-height: 140%;
+    background: rgba(0,0,0, .8);  /* box */
+    border-radius: 5px;
+    box-shadow:  0px 0px 3px rgba(0, 0, 0, .5);
+    text-shadow: 0px 0px 3px rgba(255, 255, 255, .5);
+}
+
 #menu {
     box-shadow: 0px 0px 3px rgba(0, 0, 0, .5);
     position: absolute;

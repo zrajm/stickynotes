@@ -40,7 +40,7 @@ jQuery.fn.hasAnyClass = function (selector) {
 
 (function () {
     'use strict';
-    var notes, menu;
+    var notes, menu, mainElement = $("main"), errorElement = $("#error");
 
     //////////////////////////////////////////////////////////////////////////
     //
@@ -51,7 +51,7 @@ jQuery.fn.hasAnyClass = function (selector) {
         opt = {
             afterSet: opt.afterSet || function () { return; },
             delete  : opt.delete   || function () { return; },
-            list    : opt.list     || function () { return; },
+            getAll  : opt.getAll   || function () { return; },
             poll    : opt.poll     || function () { return; },
             pull    : opt.pull     || function () { return; },
             push    : opt.push     || function () { return; }
@@ -104,21 +104,21 @@ jQuery.fn.hasAnyClass = function (selector) {
                 opt.push(id, this.json(id));
                 return this;
             },
-            forEachRemote: function (callback) {
-                opt.list(function processor(serverResponse) {
-                    $.each(serverResponse, function (id, values) {
-                        callback(id, values);
-                    });
+            pullAll: function (callback) {
+                opt.getAll(function (serverResponse) {
+                    callback(serverResponse);
                 });
                 return this;
-            },
+            }
         };
-        // Pull notes from server.
-        self.forEachRemote(function (id, values) {
-            self.set(id, values);
+        self.pullAll(function (serverResponse) {
+            opt.getAll(function processor(serverResponse) {
+                $.each(serverResponse, function (id, values) {
+                    self.set(id, values);
+                });
+                opt.poll(processPollResponse, opt.poll, session);
+            });
         });
-        // Initiate long polling.
-        opt.poll(processPollResponse, opt.poll, session);
         return self;
     }
 
@@ -219,6 +219,17 @@ jQuery.fn.hasAnyClass = function (selector) {
         return { close: closeMenu, open: openMenu };
     }());
 
+    function drawDump(rawText) {
+        $('#dump').html('<pre>' + rawText + '</pre>');
+    }
+
+    function drawError(jqXHR, textStatus, errorThrown) {
+        var errMsg = "<b>" + this.type + " request failed</b>" +
+            "<br>Server " + textStatus + ": " + jqXHR.status + " " +
+            errorThrown.replace(/:\s+/, " &ndash; ");
+        errorElement.html(errMsg).show();
+    }
+
     // Update note with specified ID, or create it, if it doesn't exist.
     function drawNote(id, notes) {
         var angle, note = notes.get(id), noteElement = $('#' + id);
@@ -264,16 +275,26 @@ jQuery.fn.hasAnyClass = function (selector) {
     notes = makeNoteCache({
         afterSet: function (id) {
             drawNote(id, notes);
-            $('#dump').html('<pre>' + notes.json() + '</pre>');
+            drawDump(notes.json());
         },
         // Refactor: Ajax calls here should use promises instead of args.
         // (Use .done()/.fail()/.always() instead of success/error/complete.)
         // Refactor: Polling trouble should be shown in the GUI.
         delete: function (id) {
-            $.ajax({ url: "api/delete.cgi?" + id, type: "DELETE" });
+            $.ajax({
+                type: "DELETE",
+                url: "api/delete.cgi?" + id,
+                error: drawError
+            });
         },
-        list: function (processor) {
-            $.ajax({ url: "api/list.cgi", type: "GET", success: processor });
+        getAll: function (processor) {
+            $.ajax({
+                type: "GET",
+                url: "api/list.cgi",
+                success: processor,
+                error: drawError,
+                complete: function () { drawDump(notes.json()); }
+            });
         },
         poll: function (processResponse, poller, session) {
             $.ajax({
@@ -282,18 +303,31 @@ jQuery.fn.hasAnyClass = function (selector) {
                 // Chrome (but not FF). See 'Polling broken' in TODO.txt
                 url: "api/poll.cgi?" + session,
                 success: processResponse,
-                complete: function () { poller(processResponse, poller, session); }
+                error: drawError,
+                complete: function () {
+                    poller(processResponse, poller, session);
+                }
             });
         },
         pull: function (id, setter) {
-            $.ajax({ url: "api/get.cgi?" + id, type: "GET", success: setter });
+            $.ajax({
+                type: "GET",
+                url: "api/get.cgi?" + id,
+                success: setter,
+                error: drawError
+            });
         },
         push: function (id, json) {
-            $.ajax({ url: "api/put.cgi?" + id, type: "PUT", data: json });
+            $.ajax({
+                type: "PUT",
+                url: "api/put.cgi?" + id,
+                data: json,
+                error: drawError
+            });
         }
     });
 
-    $("main").on("input", function (event) {
+    mainElement.on("input", function (event) {
         var element = $(event.target),
             id      = element.prop("id"),
             value   = element.html();
