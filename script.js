@@ -69,10 +69,9 @@ jQuery.fn.hasAnyClass = function (selector) {
 
         self = {
             getZMax: function () {
-                var zMax = 0, that = this;
-                this.forEach(function (id) {
-                    var z = that.get(id, "z");
-                    if (z > zMax) { zMax = z; }
+                var zMax = 0;
+                $.each(noteCache, function (id, values) {
+                    if (values.z > zMax) { zMax = values.z; }
                 });
                 return zMax;
             },
@@ -107,14 +106,12 @@ jQuery.fn.hasAnyClass = function (selector) {
             },
             forEachRemote: function (callback) {
                 opt.list(function (data) {
-                    Object.keys(data).forEach(callback);
+                    $.each(data, function (id, values) {
+                        callback(id)
+                    });
                 });
                 return this;
             },
-            forEach: function (callback) {
-                Object.keys(noteCache).forEach(callback);
-                return this;
-            }
         };
         self.forEachRemote(function (id) {      // Pull notes from server.
             opt.pull(id, function (noteData) { self.set(id, noteData); });

@@ -7,7 +7,7 @@
 * TODO Scale coordinates to normalized 10000x10000 pixel grid
   All coordinates should be recalculated to standard pixel grid, so that we get
   the same experience on different resolutions.
-* TODO Sync full state at time intervals
+* TODO "Key frame" sync -- fetch full state at time intervals
   Should we pass along a checksum of the current state with every server GET
   and/or POLL? The server could then check it against its state, and send back
   a full dump (instead of a partial one) if the checksum differs from the
@@ -19,14 +19,6 @@
   Should check occasionally that everything is up-to-date with server, so that
   if notes get fucked up they auto-adjust after some time interval. (A checksum
   ping?)
-* TODO Send initial state in one chunk
-  Even with fifty notes, each using up 5KB this would only mean a 250KB body in
-  the response, which would be acceptable.
-
-  Typical note sizes are ~100B (note lack of "K" there!) in which case 50 notes
-  (a pretty extreme case!) is about *5KB* is size!
-
-  "key frames" could also be sent this way.
 * TODO inotifywait issue?
   It seems that stickynotes sometimes leave inotifywait processes behind.
   (Maybe on reload?) Could this be remedied? (Maybe by running with
@@ -229,3 +221,12 @@
 ** DONE Server list in {id1:{},id2:{}} format instead of {list:[id1,id2]}
    CLOSED: [2015-05-10 Sun 02:06]
    As a preparation for the 'Send initial state in one chunk'.
+** DONE Send initial state in one chunk
+   CLOSED: [2015-05-10 Sun 03:07]
+   Even with fifty notes, each using up 5KB this would only mean a 250KB body in
+   the response, which would be acceptable.
+
+   Typical note sizes are ~100B (note lack of "K" there!) in which case 50 notes
+   (a pretty extreme case!) is about *5KB* is size!
+
+   "key frames" could also be sent this way.

@@ -26,6 +26,17 @@ reply() {
     esac
 }
 
+# Usage: read_data VARIABLE FILE
+#
+# Reads first line of FILE into variable VARIABLE.
+read_data() {
+    read "$1" <"$2" || {
+        [ -e "$FILE" ] || reply "404 Not Found" "Missing file"
+        [ -r "$FILE" ] || reply "403 Forbidden" "File read protected"
+        reply "500 Internal Server Error" "Failed to read file"
+    }
+}
+
 ##############################################################################
 ##                                                                          ##
 ##  Main                                                                    ##
@@ -40,10 +51,13 @@ cd "$NOTE_DIR" 2>/dev/null || {
 }
 
 for FILE in ??????????????????????.json; do    # note ID = 22 characters
-    FILE="${FILE%.json}"
-    case "$FILE" in
+    NOTE_ID="${FILE%.json}"
+    FILE="$NOTE_DIR/$NOTE_ID.json"
+    case "$NOTE_ID" in
         *[!a-zA-Z0-9_-]*) : ;;
-        *) DATA="$DATA\"$FILE\":{}," ;;
+        *)
+            read_data JSON "$FILE" 2>/dev/null
+            DATA="$DATA\"$NOTE_ID\":${JSON:-\{\}}," ;;
     esac
 done
 
