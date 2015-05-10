@@ -107,8 +107,7 @@ jQuery.fn.hasAnyClass = function (selector) {
             },
             forEachRemote: function (callback) {
                 opt.list(function (data) {
-                    // Refactor: Throw error if no '.list' property found.
-                    data.list.forEach(callback);
+                    Object.keys(data).forEach(callback);
                 });
                 return this;
             },

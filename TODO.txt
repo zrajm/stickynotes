@@ -19,8 +19,6 @@
   Should check occasionally that everything is up-to-date with server, so that
   if notes get fucked up they auto-adjust after some time interval. (A checksum
   ping?)
-* TODO Server list in {id1:{},id2:{}} format instead of {list:[id1,id2]}
-  As a preparation for the 'Send initial state in one chunk'.
 * TODO Send initial state in one chunk
   Even with fifty notes, each using up 5KB this would only mean a 250KB body in
   the response, which would be acceptable.
@@ -228,3 +226,6 @@
    + `put.cgi` (and `delete.cgi`) only writes (and deletes) files with a .json
      prefix, limiting the any problem caused by an amok script (because of a
      hacking or bug).
+** DONE Server list in {id1:{},id2:{}} format instead of {list:[id1,id2]}
+   CLOSED: [2015-05-10 Sun 02:06]
+   As a preparation for the 'Send initial state in one chunk'.

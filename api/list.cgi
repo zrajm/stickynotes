@@ -43,11 +43,11 @@ for FILE in ??????????????????????.json; do    # note ID = 22 characters
     FILE="${FILE%.json}"
     case "$FILE" in
         *[!a-zA-Z0-9_-]*) : ;;
-        *) DATA="$DATA\"$FILE\","
+        *) DATA="$DATA\"$FILE\":{}," ;;
     esac
 done
 
 reply "200 OK"
-echo "{\"list\":[${DATA%,}]}"
+echo "{${DATA%,}}"
 
 #[eof]
