@@ -105,16 +105,17 @@ jQuery.fn.hasAnyClass = function (selector) {
                 return this;
             },
             forEachRemote: function (callback) {
-                opt.list(function (data) {
-                    $.each(data, function (id, values) {
-                        callback(id)
+                opt.list(function processor(serverResponse) {
+                    $.each(serverResponse, function (id, values) {
+                        callback(id, values);
                     });
                 });
                 return this;
             },
         };
-        self.forEachRemote(function (id) {      // Pull notes from server.
-            opt.pull(id, function (noteData) { self.set(id, noteData); });
+        // Pull notes from server.
+        self.forEachRemote(function (id, values) {
+            self.set(id, values);
         });
         // Initiate long polling.
         opt.poll(processPollResponse, opt.poll, session);
