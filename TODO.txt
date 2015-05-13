@@ -3,12 +3,11 @@
 * TODO Boards
   Should automatically be created when invoked. Use hashlocation to initiate
   one.
-* TODO BUGFIX: Firefox stylesheet with oversized note
-  When a note has enough text to grow in size it doesn't look good in Firefox.
+* TODO Put makeNoteCache() constructor in its own Javascript file
 * TODO Scale coordinates to normalized 10000x10000 pixel grid
   All coordinates should be recalculated to standard pixel grid, so that we get
   the same experience on different resolutions.
-* TODO "Key frame" sync -- fetch full state at time intervals
+* TODO "Key frame" sync, fetch full state now and then (when inactive)
   Should we pass along a checksum of the current state with every server GET
   and/or POLL? The server could then check it against its state, and send back
   a full dump (instead of a partial one) if the checksum differs from the
@@ -44,12 +43,50 @@
   rescale all coordinates to internally, we could then do the same on all
   clients and enjoy a "resolution free" screen, without the client having to
   tell the server which resolution its running at any point.
+* [0/7] Optimize get/set, pull/push/poll and GUI redraws
+** TODO Load on startup pull (and "key frame" pull)
+   Fetch full state from server
+   Update the internal cache with received data
+   Redraw all notes
+** TODO Load on incoming long poll data
+   Fetch one note from server
+   Update noteCache for that note
+   Redraw note
+** TODO Note move by user
+   if (note position modified) {
+       (GUI auto updates)
+       Push note to server
+       Receive note in poll (but ignore this)
+   }
+** TODO Note text input by user
+   if (note text modified) {
+       (GUI auto updates)
+       Push note to server
+       Receive note in poll (but ignore this)
+   }
+** TODO Note color change by user
+   if (note color modified) {
+       Change note color in GUI
+       Push note to server
+       Receive note in poll (but ignore this)
+   }
+** TODO Note delete by user
+   Remove note in GUI
+   Push note delete to server
+   Receive note in poll (can't be ignored)
+** TODO Note add by user
+   Add note in GUI
+   Push note to server
+   Receive note in poll (but ignore this)
 * TODO BUGFIX: Typing backwards in Firefox
   For each keypress, when writing a note, the cursor is moved to the beginning
   of the text effectively making text entered backwards. It works just fine in
   Chrome, however.
 
   Redraw notes on poll() & get(); redraw JSON dump in background on each set().
+* TODO BUGFIX: Firefox stylesheet with oversized note
+  When entering text into a note so that it grows in size it doesn't look good
+  in Firefox, but it looks all better after a page reload.
 * TODO BUGFIX: Text cursor on note shouldn't move when note is moved
   Regardless of whether this happens because of server event, or because user
   moved note locally.
