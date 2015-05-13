@@ -224,6 +224,7 @@ jQuery.fn.hasAnyClass = function (selector) {
         $('#dump').html('<pre>' + rawText + '</pre>');
     }
 
+    function hideError() { errorElement.hide(); }
     function drawError(jqXHR, textStatus, errorThrown) {
         var errMsg = "<b>" + this.type + " request failed</b>" +
             "<br>Server " + textStatus + ": " + jqXHR.status + " " +
@@ -285,6 +286,7 @@ jQuery.fn.hasAnyClass = function (selector) {
             $.ajax({
                 type: "DELETE",
                 url: "api/delete.cgi?" + id,
+                success: hideError,
                 error: drawError
             });
         },
@@ -323,6 +325,7 @@ jQuery.fn.hasAnyClass = function (selector) {
                 type: "PUT",
                 url: "api/put.cgi?" + id,
                 data: json,
+                success: hideError,
                 error: drawError
             });
         }

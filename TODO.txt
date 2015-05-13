@@ -3,6 +3,8 @@
 * TODO Boards
   Should automatically be created when invoked. Use hashlocation to initiate
   one.
+* TODO BUGFIX: Firefox stylesheet with oversized note
+  When a note has enough text to grow in size it doesn't look good in Firefox.
 * TODO Scale coordinates to normalized 10000x10000 pixel grid
   All coordinates should be recalculated to standard pixel grid, so that we get
   the same experience on different resolutions.
@@ -255,3 +257,7 @@
    "key frames" could also be sent this way.
 ** DONE Give user feedback when server errors occurs
    CLOSED: [2015-05-10 Sun 20:05]
+** DONE Clear error message when a successful network action is done
+   CLOSED: [2015-05-13 ons 09:08]
+   When successfully push note changes to server the error message should be
+   cleared.
