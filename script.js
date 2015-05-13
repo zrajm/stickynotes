@@ -111,11 +111,12 @@ jQuery.fn.hasAnyClass = function (selector) {
                 return this;
             }
         };
-        self.pullAll(function (serverResponse) {
-            opt.getAll(function processor(serverResponse) {
+        self.pullAll(function () {
+            opt.getAll(function (serverResponse) {
                 $.each(serverResponse, function (id, values) {
                     self.set(id, values);
                 });
+                // Initiate long polling.
                 opt.poll(processPollResponse, opt.poll, session);
             });
         });
