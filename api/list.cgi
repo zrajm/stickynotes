@@ -43,10 +43,10 @@ read_data() {
 ##                                                                          ##
 ##############################################################################
 
-[ -r "$NOTE_DIR" ] || reply "403 Forbidden" "Data dir is read protected"
+#[ -r "$NOTE_DIR" ] || reply "403 Forbidden" "Data directory is read protected"
 cd "$NOTE_DIR" 2>/dev/null || {
-    [ -e "$NOTE_DIR" ] || reply "404 Not Found" "Data dir is missing"
-    [ -x "$NOTE_DIR" ] || reply "403 Forbidden" "Data dir is access protected"
+    [ -e "$NOTE_DIR" ] || reply "404 Not Found" "Data directory is missing"
+    [ -x "$NOTE_DIR" ] || reply "403 Forbidden" "Data directory is access protected"
     reply "500 Internal Server Error"
 }
 

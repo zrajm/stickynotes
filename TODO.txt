@@ -92,18 +92,28 @@
   What's the benefit of Promises here? Should it be used?
 
   [1]: http://www.html5rocks.com/en/tutorials/es6/promises/
-  "JavaScript Promises"
-
+       "JavaScript Promises"
   [2]: https://thewayofcode.wordpress.com/tag/jquery-deferred-broken/
-  "Javascript promises and why jQuery implementation is broken"
-
+       "Javascript promises and why jQuery implementation is broken"
   [3]: https://blog.domenic.me/youre-missing-the-point-of-promises/
-  "You're Missing the Point of Promises"
+       "You're Missing the Point of Promises"
+* TODO Attempt to reconnect to server if user clicks error message
+  On receiving an error the client should stop polling the server, until the
+  user retries by clicking the error message.
+
+  The error message should also state that this is required for the network
+  polling to resume (e.g. "(click here to try to reestablish connection)").
+
+  Error message should also be highlighted (with a fat white border?) on
+  mouseover to indicate its clickyness.
 * SOMEDAY/MAYBE
 ** TODO Resizeable notes(?)
-** TODO Exponential backoff in case of server errors
+** TODO Reconnect using exponential backoff in case of server errors
    Using this Promise retryer, or a derivate thereof?
    https://gist.github.com/domenic/2936696
+** TODO Use some kind of double polling, so as to not miss events?
+   That would not be possible without a more complex server setup. Current setup
+   would send both pollers the same event.
 * FINISHED
 ** DONE Load stickynotes on startup
    CLOSED: [2015-05-02 Sat 00:05]
