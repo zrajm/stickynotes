@@ -1,12 +1,22 @@
 -*- org -*-
 
+* TODO Refactor: Better separation between server & notes
+  makeNoteCache() should not contain *any* network logic -- that should all be
+  handled with callbacks. The callbacks should probably in turn be bundled into
+  an API module, which contains nothing *but* network stuff.
+* TODO get.cgi should answer in same format as poll.cgi & list.cgi
 * TODO Boards
   Should automatically be created when invoked. Use hashlocation to initiate
   one.
-* TODO Put makeNoteCache() constructor in its own Javascript file
 * TODO Scale coordinates to normalized 10000x10000 pixel grid
-  All coordinates should be recalculated to standard pixel grid, so that we get
-  the same experience on different resolutions.
+  The screen should consist of "virtual pixels" (i.e. 10.000 x 10.000 pixel
+  grid), which we rescale all coordinates to internally. We could then do the
+  same on all clients and enjoy a "resolution free" screen, without the client
+  having to tell the server which resolution its running at any point.
+* TODO Render font the same on all browsers
+  Use a web font? This is mostly so that each note can contain the same amount
+  of text, and so that lines get broken in the same same way, regardless of
+  browser/screen
 * TODO "Key frame" sync, fetch full state now and then (when inactive)
   Should we pass along a checksum of the current state with every server GET
   and/or POLL? The server could then check it against its state, and send back
@@ -26,23 +36,11 @@
   stdin disappears/SIGHUP is received?
 
   Are these left whenever we get a '504 (Gateway Timeout)' in `poll.cgi`?
-* TODO Eliminate memory leaks
-* TODO Add some credits on screen
-  Link to github + my name + license
-* TODO Refactor: Better separation between server & notes
-  makeNoteCache() should not contain *any* network logic -- that should all be
-  handled with callbacks. The callbacks should probably in turn be bundled into
-  an API module, which contains nothing *but* network stuff.
 * TODO Lock note for which server connection has been lost
   Make it transparent & disable draggability?
 * TODO Lock note that is being moved by other client
   Make it transparent & disable draggability?
 * TODO Don't capture events on note element, capture them on <main>
-* TODO Normalize screen positions
-  If the screen consists of "virtual pixels" etc. 10.000x10.00 pixels, which we
-  rescale all coordinates to internally, we could then do the same on all
-  clients and enjoy a "resolution free" screen, without the client having to
-  tell the server which resolution its running at any point.
 * [0/7] Optimize get/set, pull/push/poll and GUI redraws
 ** TODO Load on startup pull (and "key frame" pull)
    Fetch full state from server
@@ -110,7 +108,16 @@
   Currently cursor can only be placed at beginning of text inside the
   stickynotes, this is caused by the jQuery UI 'draggable' effect somehow. Will
   probably have to reimplement the draggable (and drop jQuery UI?) to fix this.
-* TODO Put makeNoteCache() constructor in its own .js file
+* TODO Attempt to reconnect to server if user clicks error message
+  On receiving an error the client should stop polling the server, until the
+  user retries by clicking the error message.
+
+  The error message should also state that this is required for the network
+  polling to resume (e.g. "(click here to try to reestablish connection)").
+
+  Error message should also be highlighted (with a fat white border?) on
+  mouseover to indicate its clickyness.
+* TODO Put makeNoteCache() constructor in its own Javascript file
 * TODO Warn user that multiple tabs may not work
   Polling reach alternating tabs in Firefox,
 * TODO Give warning when polls are dropped? / >1 tab is open?
@@ -128,6 +135,7 @@
   One tab should do the long polling from the server, and share its result
   using localStorage. See also:
   http://meta.stackexchange.com/questions/85034/multiple-chat-tabs
+* TODO Eliminate memory leaks
 * TODO Reimplement server CGI scripts in compiled language
   For better performance. Use Go, maybe?
 * TODO Have one single URL for get/put/delete API calls
@@ -152,15 +160,8 @@
        "Javascript promises and why jQuery implementation is broken"
   [3]: https://blog.domenic.me/youre-missing-the-point-of-promises/
        "You're Missing the Point of Promises"
-* TODO Attempt to reconnect to server if user clicks error message
-  On receiving an error the client should stop polling the server, until the
-  user retries by clicking the error message.
-
-  The error message should also state that this is required for the network
-  polling to resume (e.g. "(click here to try to reestablish connection)").
-
-  Error message should also be highlighted (with a fat white border?) on
-  mouseover to indicate its clickyness.
+* TODO Add some credits on screen
+  Link to github + my name + license
 * SOMEDAY/MAYBE
 ** TODO Resizeable notes(?)
 ** TODO Reconnect using exponential backoff in case of server errors
