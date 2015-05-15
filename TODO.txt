@@ -295,6 +295,8 @@
 ** DONE Give user feedback when server errors occurs
    CLOSED: [2015-05-10 Sun 20:05]
 ** DONE Clear error message when a successful network action is done
-   CLOSED: [2015-05-13 ons 09:08]
+   CLOSED: [2015-05-13 Wed 09:08]
    When successfully push note changes to server the error message should be
    cleared.
+** DONE Put functions common to all CGI scripts in shared file
+   CLOSED: [2015-05-15 Fri 22:20]
