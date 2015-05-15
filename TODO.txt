@@ -48,42 +48,58 @@
    Fetch full state from server
    Update the internal cache with received data
    Redraw all notes
+*** DONE Redraw each note (once)
+    CLOSED: [2015-05-15 Fri 23:46]
 ** TODO Load on incoming long poll data
    Fetch one note from server
    Update noteCache for that note
    Redraw note
+*** DONE Redraw note (once) in GUI
+    CLOSED: [2015-05-15 Fri 23:44]
 ** TODO Note move by user
    if (note position modified) {
        (GUI auto updates)
        Push note to server
        Receive note in poll (but ignore this)
    }
+*** DONE Do not redraw note in GUI
+    CLOSED: [2015-05-15 Fri 23:42]
 ** TODO Note text input by user
    if (note text modified) {
        (GUI auto updates)
        Push note to server
        Receive note in poll (but ignore this)
    }
+*** DONE Do not redraw note in GUI
+    CLOSED: [2015-05-15 Fri 23:42]
 ** TODO Note color change by user
    if (note color modified) {
        Change note color in GUI
        Push note to server
        Receive note in poll (but ignore this)
    }
+*** DONE Redraw note (once) in GUI
+    CLOSED: [2015-05-15 Fri 23:48]
 ** TODO Note delete by user
    Remove note in GUI
    Push note delete to server
    Receive note in poll (can't be ignored)
+*** DONE Redraw note (twice) in GUI
+    CLOSED: [2015-05-15 Fri 23:56]
+    The "twice" here is because first the note is deleted locally, then a poll
+    event without a 'session' ID is received (it cannot contain a session ID
+    since a deleted note = null, and therefore cannot have a 'session'
+    property).
+
+    Since the polled event doesn't have an ID it is applied. And the local
+    event is also applied since otherwise the note cannot be deleted if the
+    server is not responding.
 ** TODO Note add by user
    Add note in GUI
    Push note to server
    Receive note in poll (but ignore this)
-* TODO BUGFIX: Typing backwards in Firefox
-  For each keypress, when writing a note, the cursor is moved to the beginning
-  of the text effectively making text entered backwards. It works just fine in
-  Chrome, however.
-
-  Redraw notes on poll() & get(); redraw JSON dump in background on each set().
+*** DONE Redraws note
+    CLOSED: [2015-05-15 Fri 23:53]
 * TODO BUGFIX: Firefox stylesheet with oversized note
   When entering text into a note so that it grows in size it doesn't look good
   in Firefox, but it looks all better after a page reload.
@@ -300,3 +316,10 @@
    cleared.
 ** DONE Put functions common to all CGI scripts in shared file
    CLOSED: [2015-05-15 Fri 22:20]
+** DONE BUGFIX: Typing backwards in Firefox
+   CLOSED: [2015-05-15 Fri 23:39]
+   For each keypress, when writing a note, the cursor is moved to the beginning
+   of the text effectively making text entered backwards. It works just fine in
+   Chrome, however.
+
+   Redraw notes on poll() & get(); redraw JSON dump in background on each set().

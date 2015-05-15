@@ -83,12 +83,12 @@ jQuery.fn.hasAnyClass = function (selector) {
             get: function (id, prop) {
                 return prop ? noteCache[id][prop] : noteCache[id];
             },
-            set: function (id, values) {
+            set: function (id, values, suppressNoteUpdate) {
                 noteCache[id] = noteCache[id] || {};
                 $.each(values, function (prop, value) {
                     noteCache[id][prop] = value;
                 });
-                opt.afterSet(id);
+                opt.afterSet(id, suppressNoteUpdate);
                 return this;
             },
             // Erase note in note cache and remove it in GUI.
@@ -98,9 +98,9 @@ jQuery.fn.hasAnyClass = function (selector) {
                 opt.afterSet(id);
                 return this;
             },
-            push: function (id, values) {          // Set & push to server.
+            push: function (id, values, suppressNoteUpdate) {
                 values.by = session;
-                self.set(id, values);
+                self.set(id, values, suppressNoteUpdate);
                 opt.push(id, this.json(id));
                 return this;
             },
@@ -139,7 +139,7 @@ jQuery.fn.hasAnyClass = function (selector) {
         notes.push(id, {
             x: Math.round(ui.offset.left),
             y: Math.round(ui.offset.top)
-        });
+        }, true);
     }
 
     function putNoteOnTop(id) {
@@ -275,8 +275,8 @@ jQuery.fn.hasAnyClass = function (selector) {
     //  Main
     //
     notes = makeNoteCache({
-        afterSet: function (id) {
-            drawNote(id, notes);
+        afterSet: function (id, suppressNoteUpdate) {
+            if (!suppressNoteUpdate) { drawNote(id, notes); }
             drawDump(notes.json());
         },
         // Refactor: Ajax calls here should use promises instead of args.
@@ -335,7 +335,7 @@ jQuery.fn.hasAnyClass = function (selector) {
         var element = $(event.target),
             id      = element.prop("id"),
             value   = element.html();
-        notes.push(id, { text: value });
+        notes.push(id, { text: value }, true);
     }).
         on("contextmenu", menu.open).
         on("click", menu.close);
