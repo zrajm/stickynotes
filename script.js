@@ -53,7 +53,6 @@ jQuery.fn.hasAnyClass = function (selector) {
             delete  : opt.delete   || function () { return; },
             getAll  : opt.getAll   || function () { return; },
             poll    : opt.poll     || function () { return; },
-            pull    : opt.pull     || function () { return; },
             push    : opt.push     || function () { return; }
         };
 
@@ -310,14 +309,6 @@ jQuery.fn.hasAnyClass = function (selector) {
                 complete: function () {
                     poller(processResponse, poller, session);
                 }
-            });
-        },
-        pull: function (id, setter) {
-            $.ajax({
-                type: "GET",
-                url: "api/get.cgi?" + id,
-                success: setter,
-                error: drawError
             });
         },
         push: function (id, json) {

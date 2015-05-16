@@ -4,7 +4,6 @@
   makeNoteCache() should not contain *any* network logic -- that should all be
   handled with callbacks. The callbacks should probably in turn be bundled into
   an API module, which contains nothing *but* network stuff.
-* TODO get.cgi should answer in same format as poll.cgi & list.cgi
 * TODO Boards
   Should automatically be created when invoked. Use hashlocation to initiate
   one.
@@ -324,3 +323,8 @@
    Chrome, however.
 
    Redraw notes on poll() & get(); redraw JSON dump in background on each set().
+** DONE Removed dead code (get.cgi and related Javascipt)
+   CLOSED: [2015-05-16 Sat 02:33]
+   This code isn't used any more since only list.cgi (which returns all notes)
+   and poll.cgi (which returns one node on modification) is used to read
+   content from the server.
