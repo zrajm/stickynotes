@@ -328,3 +328,5 @@
    This code isn't used any more since only list.cgi (which returns all notes)
    and poll.cgi (which returns one node on modification) is used to read
    content from the server.
+** DONE BUGFIX: Server now responds properly if zero notes are stored
+   CLOSED: [2015-05-16 Sat 03:44]
