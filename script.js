@@ -200,10 +200,10 @@ jQuery.fn.hasAnyClass = function (selector) {
         }
         function openMenu(event) {
             var element = $(event.target);
+            closeMenu();
             if (element.closest(menuElement).length) {// on menu (abort)
                 return true;
             }
-            closeMenu();
             if (element.closest(".note").length) {    // on sticky note
                 selected = element.addClass("selected");
                 deleteChoice.show();
