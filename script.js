@@ -27,12 +27,12 @@ var random132BitString = (function() {
     };
 })();
 
-// Lika .hasClass() allows multiple classes. Returns true if at least one class
-// matches.
+// Like a .hasClass(), but allows multiple classes. Return true if one or more
+// classes matches.
 jQuery.fn.hasAnyClass = function (selector) {
     'use strict';
-    var i, classes = selector.split(" "), l = classes.length;
-    for (i = 0; i < l; i += 1) {
+    var i, classes = selector.split(" "), len = classes.length;
+    for (i = 0; i < len; i += 1) {
         if (this.hasClass(classes[i])) { return true; }
     }
     return false;
