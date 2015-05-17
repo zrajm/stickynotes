@@ -269,6 +269,11 @@ jQuery.fn.hasAnyClass = function (selector) {
         return noteElement;
     }
 
+    function request(opt) {
+        return $.ajax(opt).
+            fail(drawError);
+    }
+
     //////////////////////////////////////////////////////////////////////////
     //
     //  Main
@@ -278,47 +283,29 @@ jQuery.fn.hasAnyClass = function (selector) {
             if (!suppressNoteUpdate) { drawNote(id, notes); }
             drawDump(notes.json());
         },
-        // Refactor: Ajax calls here should use promises instead of args.
-        // (Use .done()/.fail()/.always() instead of success/error/complete.)
-        // Refactor: Polling trouble should be shown in the GUI.
         delete: function (id) {
-            $.ajax({
-                type: "DELETE",
-                url: "api/delete.cgi?" + id,
-                success: hideError,
-                error: drawError
-            });
+            request({ type: "DELETE", url: "api/delete.cgi?" + id }).
+                done(hideError);
         },
         getAll: function (processor) {
-            $.ajax({
-                type: "GET",
-                url: "api/list.cgi",
-                success: processor,
-                error: drawError,
-                complete: function () { drawDump(notes.json()); }
-            });
+            function always() { drawDump(notes.json()); }
+            request({ type: "GET", url: "api/list.cgi" }).
+                done(processor).
+                always(function () { drawDump(notes.json()); });
         },
         poll: function (processResponse, poller, session) {
-            $.ajax({
-                // Refactor: Make something that works on FF (other?) too.
-                // 'session' arg is a dummy which makes long polling work in
-                // Chrome (but not FF). See 'Polling broken' in TODO.txt
-                url: "api/poll.cgi?" + session,
-                success: processResponse,
-                error: drawError,
-                complete: function () {
+            // Refactor: Make something that works in multiple tabs on Firefox
+            // (other?) too. 'session' arg is a dummy which makes long polling
+            // work in Chrome (but not FF). See 'Polling broken' in TODO.txt
+            request({ url: "api/poll.cgi?" + session }).
+                done(processResponse).
+                always(function () {
                     poller(processResponse, poller, session);
-                }
-            });
+                });
         },
         push: function (id, json) {
-            $.ajax({
-                type: "PUT",
-                url: "api/put.cgi?" + id,
-                data: json,
-                success: hideError,
-                error: drawError
-            });
+            request({ type: "PUT", url: "api/put.cgi?" + id, data: json }).
+                done(hideError);
         }
     });
 

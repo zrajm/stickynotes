@@ -153,12 +153,30 @@
 
   What's the benefit of Promises here? Should it be used?
 
+  Note that promises only pass one argument to its callbacks, and that we thus
+  will have to capture some info (to be used in error messages etc.) at the
+  moment of sending the ajax call. How do we do this? Article on Q.js[4] might
+  contain helpful tips (as it seems the Q implementation of Promises is
+  identical, or very similar, to the one adopted by Ecmascript).
+
+  Possible future 'request' function?
+
+    function request(opt) {
+        console.log('request', opt);
+        // http://www.html5rocks.com/en/tutorials/es6/promises/
+        // #toc-lib-compatibility
+        return Promise.resolve($.ajax(opt));
+    }
+
+
   [1]: http://www.html5rocks.com/en/tutorials/es6/promises/
        "JavaScript Promises"
   [2]: https://thewayofcode.wordpress.com/tag/jquery-deferred-broken/
        "Javascript promises and why jQuery implementation is broken"
   [3]: https://blog.domenic.me/youre-missing-the-point-of-promises/
        "You're Missing the Point of Promises"
+  [4]: https://github.com/kriskowal/q/wiki/Coming-from-jQuery
+       "Coming from jQuery" esp. chapter "Single vs. Multiple Values"
 * TODO Add some credits on screen
   Link to github + my name + license
 * SOMEDAY/MAYBE
@@ -330,3 +348,6 @@
    content from the server.
 ** DONE BUGFIX: Server now responds properly if zero notes are stored
    CLOSED: [2015-05-16 Sat 03:44]
+** DONE Moved ajax request to separate function
+   CLOSED: [2015-05-17 Sun 13:55]
+   This is hopefully useful when migrating to using Javascript ES6 Promises.
