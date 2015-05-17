@@ -7,11 +7,6 @@
 * TODO Boards
   Should automatically be created when invoked. Use hashlocation to initiate
   one.
-* TODO Scale coordinates to normalized 10000x10000 pixel grid
-  The screen should consist of "virtual pixels" (i.e. 10.000 x 10.000 pixel
-  grid), which we rescale all coordinates to internally. We could then do the
-  same on all clients and enjoy a "resolution free" screen, without the client
-  having to tell the server which resolution its running at any point.
 * TODO Render font the same on all browsers
   Use a web font? This is mostly so that each note can contain the same amount
   of text, and so that lines get broken in the same same way, regardless of
@@ -351,3 +346,17 @@
 ** DONE Moved ajax request to separate function
    CLOSED: [2015-05-17 Sun 13:55]
    This is hopefully useful when migrating to using Javascript ES6 Promises.
+** DONE Scale coordinates to normalized pixel grid
+   CLOSED: [2015-05-18 Mon 01:50]
+   Note coordinates now expressed in percent x/y of total possible span (i.e.
+   board width minus note width, and board height minus note height), and
+   rounded off to three decimals.
+
+   This gives us a "resolution free" screen, meaning that each client will see
+   all notes and in their (approximate) right place. A note an the bottom right
+   corner, will be in the bottom right corner for each user.
+
+   Conversion to and from "percent coordinates" are done on getting/setting, and
+   so our internal data structure knows only these coordinates. noteCache
+   exposes a method setSize() which should be called in order to recalculate and
+   redraw the notes when window is resized.
