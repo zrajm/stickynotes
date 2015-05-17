@@ -288,7 +288,6 @@ jQuery.fn.hasAnyClass = function (selector) {
                 done(hideError);
         },
         getAll: function (processor) {
-            function always() { drawDump(notes.json()); }
             request({ type: "GET", url: "api/list.cgi" }).
                 done(processor).
                 always(function () { drawDump(notes.json()); });
