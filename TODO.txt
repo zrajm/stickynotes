@@ -360,3 +360,8 @@
    so our internal data structure knows only these coordinates. noteCache
    exposes a method setSize() which should be called in order to recalculate and
    redraw the notes when window is resized.
+** DONE BUGFIX: Cursor should show on new notes on Firefox
+   CLOSED: [2015-05-18 Mon 02:57]
+   Firefox do not display the text cursor (caret) in contenteditable elements
+   unless they have some content, therefore added '<br>' as content if note
+   content in empty. (This does not seem to affect anything else.)

@@ -303,25 +303,15 @@ jQuery.fn.hasAnyClass = function (selector) {
         if (!note) {                           // note has been deleted
             return noteElement.remove();       //   remove any note in GUI
         }
-        if (noteElement.length > 0) {          // modify existing note in GUI
-            noteElement.
-                setColorClass(note.color).
-                css({ left: note.x, top: note.y, zIndex: note.z }).
-                html(note.text);
-        } else {                               // create new note in GUI
+        if (noteElement.length === 0) {        // create new GUI note
             angle = rnd(-10, 10) + "deg";
             noteElement = $("<div>", {
                 "class"          : "note",
                 "contenteditable": "",
-                "html"           : note.text,
                 "spellcheck"     : false,
                 "id"             : id
             }).
-                setColorClass(note.color).
                 css({
-                    left           : note.x,
-                    top            : note.y,
-                    zIndex         : note.z,
                     transform      : "rotate(" + angle + ")",
                     WebkitTransform: "rotate(" + angle + ")"
                 }).
@@ -332,7 +322,14 @@ jQuery.fn.hasAnyClass = function (selector) {
                 }).
                 mousedown(function () { putNoteOnTop(id); });
         }
-        return noteElement;
+        return noteElement.                    // modify new or existing note
+            setColorClass(note.color).
+            html(note.text || "<br>").
+            css({
+                left  : note.x,
+                top   : note.y,
+                zIndex: note.z
+            });
     }
 
     function request(opt) {
