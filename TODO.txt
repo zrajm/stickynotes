@@ -4,13 +4,18 @@
   makeNoteCache() should not contain *any* network logic -- that should all be
   handled with callbacks. The callbacks should probably in turn be bundled into
   an API module, which contains nothing *but* network stuff.
-* TODO Boards
-  Should automatically be created when invoked. Use hashlocation to initiate
-  one.
+* TODO Support for multiple boards
+  If loaded without specified hashlocation, then generate random hashlocation
+  and redirect there.
+
+  If loaded with a hashlocation, display the associated sticky note board.
 * TODO Render font the same on all browsers
   Use a web font? This is mostly so that each note can contain the same amount
   of text, and so that lines get broken in the same same way, regardless of
-  browser/screen
+  browser/screen.
+
+  What to use? Something similar to handwritten? Or is it better to use a plain
+  sans-serif font?
 * TODO "Key frame" sync, fetch full state now and then (when inactive)
   Should we pass along a checksum of the current state with every server GET
   and/or POLL? The server could then check it against its state, and send back
@@ -154,15 +159,18 @@
   contain helpful tips (as it seems the Q implementation of Promises is
   identical, or very similar, to the one adopted by Ecmascript).
 
-  Possible future 'request' function?
+  Possible future 'request' function? This function takes advantage of the fact
+  that `Promise.resolve()` returns a Promise, and (a) can take either a value
+  (at which point it will resolve the promise with that value) or (b) a any
+  object with a `.then()` method (which will resolve the promise whenever the
+  thenable is resolved.
 
-    function request(opt) {
-        console.log('request', opt);
-        // http://www.html5rocks.com/en/tutorials/es6/promises/
-        // #toc-lib-compatibility
-        return Promise.resolve($.ajax(opt));
-    }
-
+      function request(opt) {
+          console.log('request', opt);
+          // http://www.html5rocks.com/en/tutorials/es6/promises/
+          // #toc-lib-compatibility
+          return Promise.resolve($.ajax(opt));
+      }
 
   [1]: http://www.html5rocks.com/en/tutorials/es6/promises/
        "JavaScript Promises"
@@ -174,6 +182,21 @@
        "Coming from jQuery" esp. chapter "Single vs. Multiple Values"
 * TODO Add some credits on screen
   Link to github + my name + license
+* TODO Move all random number creation to server(?)
+  This would allow board number creation to remain secure, a single CGI (which
+  creates a board with a random name, and returns that name) could be used to
+  create the board -- forcing board names to be auto generated, rather that
+  possibly injected by the end user.
+
+  This would also render stickynotes unusable without a server.
+
+  Also we would need a way to fetch a session ID from the server.
+
+  Serial number are used for:
+
+     + Note IDs
+     + Session IDs (used by 'by' field in each note)
+     + Board IDs
 * SOMEDAY/MAYBE
 ** TODO Resizeable notes(?)
 ** TODO Reconnect using exponential backoff in case of server errors
@@ -365,3 +388,5 @@
    Firefox do not display the text cursor (caret) in contenteditable elements
    unless they have some content, therefore added '<br>' as content if note
    content in empty. (This does not seem to affect anything else.)
+** DONE Simplified request function args
+   CLOSED: [2015-05-18 Mon 23:56]

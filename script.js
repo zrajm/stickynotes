@@ -332,10 +332,26 @@ jQuery.fn.hasAnyClass = function (selector) {
             });
     }
 
-    function request(opt) {
-        return $.ajax(opt).
-            fail(drawError);
-    }
+
+    var request = (function () {
+        var requests = {
+            DELETE: { type: "DELETE", url: "api/delete.cgi" },
+            GET   : { type: "GET",    url: "api/list.cgi"   },
+            POLL  : { type: "GET",    url: "api/poll.cgi"   },
+            PUT   : { type: "PUT",    url: "api/put.cgi"    }
+        };
+        return function (req, noteID, data) {
+            var opt = {
+                type: requests[req].type,
+                url:  requests[req].url
+            };
+            if (data) { opt.data = data; }
+            if (noteID) {
+                opt.url += "?" + (noteID || "");
+            }
+            return $.ajax(opt).fail(drawError);
+        }
+    }());
 
     //////////////////////////////////////////////////////////////////////////
     //
@@ -347,11 +363,11 @@ jQuery.fn.hasAnyClass = function (selector) {
             drawDump(notes.json());
         },
         delete: function (id) {
-            request({ type: "DELETE", url: "api/delete.cgi?" + id }).
+            request("DELETE", id).
                 done(hideError);
         },
         getAll: function (processor) {
-            request({ type: "GET", url: "api/list.cgi" }).
+            request("GET").
                 done(processor).
                 always(function () { drawDump(notes.json()); });
         },
@@ -359,14 +375,14 @@ jQuery.fn.hasAnyClass = function (selector) {
             // Refactor: Make something that works in multiple tabs on Firefox
             // (other?) too. 'session' arg is a dummy which makes long polling
             // work in Chrome (but not FF). See 'Polling broken' in TODO.txt
-            request({ url: "api/poll.cgi?" + session }).
+            request("POLL", session).
                 done(processResponse).
                 always(function () {
                     poller(processResponse, poller, session);
                 });
         },
         push: function (id, json) {
-            request({ type: "PUT", url: "api/put.cgi?" + id, data: json }).
+            request("PUT", id, json).
                 done(hideError);
         },
         redraw: function (id, note) {
