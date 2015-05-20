@@ -336,7 +336,7 @@ jQuery.fn.hasAnyClass = function (selector) {
     var request = (function () {
         var requests = {
             DELETE: { type: "DELETE", url: "api/delete.cgi" },
-            GET   : { type: "GET",    url: "api/list.cgi"   },
+            GET   : { type: "GET",    url: "api/get.cgi"    },
             POLL  : { type: "GET",    url: "api/poll.cgi"   },
             PUT   : { type: "PUT",    url: "api/put.cgi"    }
         };

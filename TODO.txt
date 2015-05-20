@@ -1,5 +1,10 @@
 -*- org -*-
 
+* TODO BUGFIX: Encode JSON properly
+  If one inserts data with " (at least Daniel copy/pasted an image into a note,
+  resulting in an <img> tag being inserted) then the JSON written on the server
+  is broken (any occurring '"' are not escaped properly) causing the client to
+  fail completely on initial load (no notes are shown at all).
 * TODO Refactor: Better separation between server & notes
   makeNoteCache() should not contain *any* network logic -- that should all be
   handled with callbacks. The callbacks should probably in turn be bundled into
@@ -390,3 +395,8 @@
    content in empty. (This does not seem to affect anything else.)
 ** DONE Simplified request function args
    CLOSED: [2015-05-18 Mon 23:56]
+** DONE Rename `list.cgi` -> `get.cgi`
+   CLOSED: [2015-05-20 Wed 23:01]
+   Since `list.cgi` returns the content of all notes on the board (and not just
+   a list of which notes are available), it is more correct to call it
+   `get.cgi`.
