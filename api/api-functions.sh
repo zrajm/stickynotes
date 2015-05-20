@@ -60,7 +60,7 @@ change_dir() {
 #
 # Reads first line of FILE into variable VARIABLE.
 read_data() {
-    read "$1" <"$2" || {
+    read -r "$1" <"$2" || {
         [ -e "$FILE" ] || reply "404 Not Found" "File missing"
         [ -r "$FILE" ] || reply "403 Forbidden" "File read protected"
         reply "500 Internal Server Error" "Failed to read file"
@@ -69,7 +69,7 @@ read_data() {
 
 write_data() {
     local FILE="$1" DATA="$2"
-    read PREVIOUS <"$FILE"                     # (one line of file)
+    read -r PREVIOUS <"$FILE"                  # (one line of file)
     [ "$DATA" = "$PREVIOUS" ] && return 0      # do nada if data is unchanged
     echo "$DATA" >"$FILE" || {
         [ -w "$FILE" ] || reply "403 Forbidden" "File write protected"
