@@ -4,10 +4,15 @@
 . "./api-functions.sh"
 
 ##############################################################################
+# Accept one parameter (all other silently ignored):
+#
+#   * <BOARD_ID>/<NOTE_ID> -- delete a single note
+#
+##############################################################################
 
-NOTE_ID="$1"
-check_note_id "$NOTE_ID"
-FILE="$NOTE_DIR/$NOTE_ID.json"
+FULL_ID="$1"
+check_full_id "$FULL_ID"
+FILE="$NOTE_DIR/$FULL_ID.json"
 
 rm -f "$FILE" 2>/dev/null \
     || reply "500 Internal Server Error" "Failed to delete file"

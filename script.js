@@ -38,9 +38,17 @@ jQuery.fn.hasAnyClass = function (selector) {
     return false;
 };
 
+function getBoardID() {
+    if (!location.hash.match(/^#[a-zA-Z0-9_-]{22}$/)) {
+        history.replaceState(null, null, "#" + random132BitString());
+    }
+    return location.hash.replace(/^#/, "");
+}
+
 (function () {
     'use strict';
-    var notes, menu, mainElement = $("main"), errorElement = $("#error");
+    var notes, menu, mainElement = $("main"), errorElement = $("#error"),
+        boardID = getBoardID();
 
     //////////////////////////////////////////////////////////////////////////
     //
@@ -332,7 +340,6 @@ jQuery.fn.hasAnyClass = function (selector) {
             });
     }
 
-
     var request = (function () {
         var requests = {
             DELETE: { type: "DELETE", url: "api/delete.cgi" },
@@ -340,14 +347,15 @@ jQuery.fn.hasAnyClass = function (selector) {
             POLL  : { type: "GET",    url: "api/poll.cgi"   },
             PUT   : { type: "PUT",    url: "api/put.cgi"    }
         };
-        return function (req, noteID, data) {
-            var opt = {
+        return function (req, boardID, noteID, data) {
+            var arg, opt = {
                 type: requests[req].type,
                 url:  requests[req].url
             };
-            if (data) { opt.data = data; }
-            if (noteID) {
-                opt.url += "?" + (noteID || "");
+            if (data) { opt.data = data; }     // request body
+            if (boardID) {                     // add board + note ID to URL
+                arg = boardID + (noteID ? "/" + noteID : "");
+                if (arg) { opt.url += "?" + arg; }
             }
             return $.ajax(opt).fail(drawError);
         }
@@ -363,26 +371,23 @@ jQuery.fn.hasAnyClass = function (selector) {
             drawDump(notes.json());
         },
         delete: function (id) {
-            request("DELETE", id).
+            request("DELETE", boardID, id).
                 done(hideError);
         },
         getAll: function (processor) {
-            request("GET").
+            request("GET", boardID).
                 done(processor).
                 always(function () { drawDump(notes.json()); });
         },
         poll: function (processResponse, poller, session) {
-            // Refactor: Make something that works in multiple tabs on Firefox
-            // (other?) too. 'session' arg is a dummy which makes long polling
-            // work in Chrome (but not FF). See 'Polling broken' in TODO.txt
-            request("POLL", session).
+            request("POLL", boardID).
                 done(processResponse).
                 always(function () {
                     poller(processResponse, poller, session);
                 });
         },
         push: function (id, json) {
-            request("PUT", id, json).
+            request("PUT", boardID, id, json).
                 done(hideError);
         },
         redraw: function (id, note) {

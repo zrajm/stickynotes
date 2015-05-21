@@ -1,14 +1,17 @@
 -*- org -*-
 
+* TODO BUGFIX: Reload board from server when hash location change
+  Currently the board associated with a specific hash location isn't loaded if
+  one changes the hash location (one has to do a manual refresh after entering
+  hash location).
+* TODO poll.cgi should not create dir for non-existing board
+  It's kinda counter-intuitive that any kind of read operation would *write*
+  stuff. -- Also it seems inefficient, and a potential attack vector (even
+  accidentally so).
 * TODO Refactor: Better separation between server & notes
   makeNoteCache() should not contain *any* network logic -- that should all be
   handled with callbacks. The callbacks should probably in turn be bundled into
   an API module, which contains nothing *but* network stuff.
-* TODO Support for multiple boards
-  If loaded without specified hashlocation, then generate random hashlocation
-  and redirect there.
-
-  If loaded with a hashlocation, display the associated sticky note board.
 * TODO Render font the same on all browsers
   Use a web font? This is mostly so that each note can contain the same amount
   of text, and so that lines get broken in the same same way, regardless of
@@ -130,10 +133,17 @@
   other tabs by means of localStorage. Or the server could enumerate each
   server response so that we can keep track of, and warn, when not every tab
   gets all events.
-* TODO Allow multiple tabs
+* TODO Use HTTP streaming instead of long polling?
+  Probably, with many clients (or too much activity) events will be dropped
+* TODO BUGFIX: Allow multiple tabs
   One tab should do the long polling from the server, and share its result
   using localStorage. See also:
   http://meta.stackexchange.com/questions/85034/multiple-chat-tabs
+
+  Removed the cache-bashing query string for long polling when adding boards,
+  so now multiple tabs won't work in any browser (each polled event will only
+  reach one tab in turn). Previously polling worked properly in Chrome, but not
+  in Firefox.
 * TODO Eliminate memory leaks
 * TODO Reimplement server CGI scripts in compiled language
   For better performance. Use Go, maybe?
@@ -182,6 +192,12 @@
        "Coming from jQuery" esp. chapter "Single vs. Multiple Values"
 * TODO Add some credits on screen
   Link to github + my name + license
+* TODO Key bindings
+** TODO <Tab>/<Shift-Tab> to move selection between notes
+** TODO Arrow keys to move selected note
+** TODO <Esc> to stop editing a note
+   <Tab> should also work to jump to the next one, even editing.
+** TODO Any other key to edit note
 * TODO Move all random number creation to server(?)
   This would allow board number creation to remain secure, a single CGI (which
   creates a board with a random name, and returns that name) could be used to
@@ -197,6 +213,8 @@
      + Note IDs
      + Session IDs (used by 'by' field in each note)
      + Board IDs
+* TODO Better error messages(?)
+  Should error messages include the board/note ID number (where applicable)?
 * SOMEDAY/MAYBE
 ** TODO Resizeable notes(?)
 ** TODO Reconnect using exponential backoff in case of server errors
@@ -405,3 +423,7 @@
    This turns out to be a buncha missed '-r' for the 'read' command (without
    which '\"' was interpreted as a plain '"', destroying the data integrity of
    the JSON whenever there were escaped characters.
+** DONE Support for multiple boards
+   CLOSED: [2015-05-21 Thu 09:34]
+   If loaded without specified hash location, generate random hash location and
+   redirect there. If loaded with a hash location, display the associated sticky note board.

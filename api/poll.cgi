@@ -4,6 +4,18 @@
 . "./api-functions.sh"
 
 ##############################################################################
+# Accept one parameter (all other silently ignored):
+#
+#   * <BOARD_ID> -- long poll for any changes a board
+#
+# If no data directory exists for the specified board, then one is created
+
+##############################################################################
+
+BOARD_ID="$1"
+check_id "$BOARD_ID" board
+NOTE_DIR="$NOTE_DIR/$BOARD_ID"
+make_dir "$NOTE_DIR"
 
 NOTE_ID="$(inotifywait "$NOTE_DIR" -qre close_write,delete --format=%f)" || {
     if ! which inotifywait >/dev/null; then
