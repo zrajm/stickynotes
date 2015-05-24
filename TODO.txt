@@ -1,9 +1,10 @@
 -*- org -*-
 
-* TODO BUGFIX: Reload board from server when hash location change
-  Currently the board associated with a specific hash location isn't loaded if
-  one changes the hash location (one has to do a manual refresh after entering
-  hash location).
+* TODO Refactor: Put board & DOM elements into separate object
+* TODO Referring to a bad board should not create a new board
+  I.e. if you type an invalid #BOARD ID then, instead of redirecting to a
+  random valid board, the user should get an error message. (And a link
+  to a random new board?)
 * TODO poll.cgi should not create dir for non-existing board
   It's kinda counter-intuitive that any kind of read operation would *write*
   stuff. -- Also it seems inefficient, and a potential attack vector (even
@@ -197,7 +198,8 @@
 ** TODO Arrow keys to move selected note
 ** TODO <Esc> to stop editing a note
    <Tab> should also work to jump to the next one, even editing.
-** TODO Any other key to edit note
+** TODO Start typing to edit a note
+** TODO <Backspace>/<Delete> in an empty note to delete it
 * TODO Move all random number creation to server(?)
   This would allow board number creation to remain secure, a single CGI (which
   creates a board with a random name, and returns that name) could be used to
@@ -216,6 +218,10 @@
 * TODO Better error messages(?)
   Should error messages include the board/note ID number (where applicable)?
 * SOMEDAY/MAYBE
+** TODO Link to used boards if no board is specified
+   Store name of each board visited by user, then show links to each board of
+   if no board number is entered. Probably need some extra metadata to guide
+   user in this: Board title? Or in last time accessed (or created) enough?
 ** TODO Resizeable notes(?)
 ** TODO Reconnect using exponential backoff in case of server errors
    Using this Promise retryer, or a derivate thereof?
@@ -427,3 +433,8 @@
    CLOSED: [2015-05-21 Thu 09:34]
    If loaded without specified hash location, generate random hash location and
    redirect there. If loaded with a hash location, display the associated sticky note board.
+** DONE BUGFIX: Load new board from server when hash location changes
+   CLOSED: [2015-05-25 Mon 00:20]
+   Currently the board associated with a specific hash location isn't loaded if
+   one changes the hash location (one has to do a manual refresh after entering
+   hash location).

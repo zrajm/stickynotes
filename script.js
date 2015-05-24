@@ -48,7 +48,14 @@ function getBoardID() {
 (function () {
     'use strict';
     var notes, menu, mainElement = $("main"), errorElement = $("#error"),
+        noteCacheOpts, boardID;
+
+    function redrawBoard() {
+        $("> .note", mainElement).remove();    // remove all notes
         boardID = getBoardID();
+        notes = makeNoteCache(noteCacheOpts).
+            setSize(mainElement.width(), mainElement.height());
+    }
 
     //////////////////////////////////////////////////////////////////////////
     //
@@ -365,7 +372,7 @@ function getBoardID() {
     //
     //  Main
     //
-    notes = makeNoteCache({
+    noteCacheOpts = {
         afterSet: function (id, suppressNoteUpdate) {
             if (!suppressNoteUpdate) { drawNote(id, notes); }
             drawDump(notes.json());
@@ -394,12 +401,15 @@ function getBoardID() {
             /*jslint unparam:true */
             drawNote(id, notes);
         }
-    }).setSize(mainElement.width(), mainElement.height());
+    };
+
+    redrawBoard();
 
     // Recalculate board size & redraw notes on window size change.
     $(window).resize(function () {
         notes.setSize(mainElement.width(), mainElement.height());
-    });
+    }).on('hashchange', redrawBoard);
+
 
     mainElement.on("input", function (event) {
         var element = $(event.target),
