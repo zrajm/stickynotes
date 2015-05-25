@@ -1,6 +1,9 @@
 -*- org -*-
 
 * TODO Refactor: Put board & DOM elements into separate object
+  Split stuff into separate files.
+  + Network
+  + GUI updates / screen state
 * TODO Use HTTP streaming instead of long polling?
   Probably, with many clients (or too much activity) events will be dropped
 * TODO Strip HTML on copy/paste
@@ -115,6 +118,7 @@
   Currently cursor can only be placed at beginning of text inside the
   stickynotes, this is caused by the jQuery UI 'draggable' effect somehow. Will
   probably have to reimplement the draggable (and drop jQuery UI?) to fix this.
+* TODO BUGFIX: Firefox does not react on fist poll event after page load
 * TODO Attempt to reconnect to server if user clicks error message
   On receiving an error the client should stop polling the server, until the
   user retries by clicking the error message.
