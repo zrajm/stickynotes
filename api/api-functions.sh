@@ -65,7 +65,7 @@ check_id() {
         "")               reply 400 "Missing $TYPE ID" ;;
         *[!a-zA-Z0-9_-]*) reply 400 "Invalid char $MSG" ;;
         ??????????????????????) : ;;           # ID string = 22 characters
-        *)                reply 400 "Not 22 chars long $MSG" ;;
+        *)                reply 400 "Not 22 characters $MSG" ;;
     esac
 }
 
