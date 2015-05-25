@@ -1,6 +1,14 @@
 -*- org -*-
 
 * TODO Refactor: Put board & DOM elements into separate object
+* TODO Use HTTP streaming instead of long polling?
+  Probably, with many clients (or too much activity) events will be dropped
+* TODO Strip HTML on copy/paste
+* [0/2] Tests
+** TODO Test CGI scripts
+** TODO Test Javascript
+*** TODO Network events should not happen more often than necessary
+*** TODO Redraw events should not happen more often than necessary
 * TODO poll.cgi should not create dir for non-existing board
   It's kinda counter-intuitive that any kind of read operation would *write*
   stuff. -- Also it seems inefficient, and a potential attack vector (even
@@ -116,7 +124,6 @@
 
   Error message should also be highlighted (with a fat white border?) on
   mouseover to indicate its clickyness.
-* TODO Put makeNoteCache() constructor in its own Javascript file
 * TODO Warn user that multiple tabs may not work
   Polling reach alternating tabs in Firefox,
 * TODO Give warning when polls are dropped? / >1 tab is open?
@@ -130,8 +137,6 @@
   other tabs by means of localStorage. Or the server could enumerate each
   server response so that we can keep track of, and warn, when not every tab
   gets all events.
-* TODO Use HTTP streaming instead of long polling?
-  Probably, with many clients (or too much activity) events will be dropped
 * TODO BUGFIX: Allow multiple tabs
   One tab should do the long polling from the server, and share its result
   using localStorage. See also:
@@ -144,14 +149,6 @@
 * TODO Eliminate memory leaks
 * TODO Reimplement server CGI scripts in compiled language
   For better performance. Use Go, maybe?
-* TODO Have one single URL for get/put/delete API calls
-  It's very nice and easy to get quick overview with each of these put into
-  separate files, but if all CGI files are put into a single dir, then an
-  `index.cgi` to that directory could simply source the other files as needed
-  (after first sourcing a file with the shell functions they all share).
-
-  (This may require adding `index.cgi` to the list of index files in the Apache
-  config.)
 * TODO Use true Promise for AJAX calls?
   This technique was mentioned in the article Daniel linked to[1] (which also
   pointed out that the jQuery "promise" in not a proper promise. (Though in
@@ -214,6 +211,14 @@
 * TODO Better error messages(?)
   Should error messages include the board/note ID number (where applicable)?
 * SOMEDAY/MAYBE
+** TODO Have one single URL for get/put/delete API calls
+   It's very nice and easy to get quick overview with each of these put into
+   separate files, but if all CGI files are put into a single dir, then an
+   `index.cgi` to that directory could simply source the other files as needed
+   (after first sourcing a file with the shell functions they all share).
+
+   (This may require adding `index.cgi` to the list of index files in the Apache
+   config.)
 ** TODO Link to used boards if no board is specified
    Store name of each board visited by user, then show links to each board of
    if no board number is entered. Probably need some extra metadata to guide
@@ -444,3 +449,5 @@
    I.e. if you type an invalid #BOARD ID then, instead of redirecting to a
    random valid board, the user should get an error message. (And a link
    to a random new board?)
+** DONE Put makeNoteCache() in its own Javascript file
+   CLOSED: [2015-05-25 Mon 09:26]
