@@ -1,10 +1,6 @@
 -*- org -*-
 
 * TODO Refactor: Put board & DOM elements into separate object
-* TODO Referring to a bad board should not create a new board
-  I.e. if you type an invalid #BOARD ID then, instead of redirecting to a
-  random valid board, the user should get an error message. (And a link
-  to a random new board?)
 * TODO poll.cgi should not create dir for non-existing board
   It's kinda counter-intuitive that any kind of read operation would *write*
   stuff. -- Also it seems inefficient, and a potential attack vector (even
@@ -443,3 +439,8 @@
    Instead of having to specify the full error string (e.g. "404 Not Found")
    for the 'reply' function it is now enough to specify the error code number
    only (e.g. "400") and 'reply' will fill message given in the HTTP specs.
+** DONE Bad board name in URL should not create a new board
+   CLOSED: [2015-05-25 Mon 09:10]
+   I.e. if you type an invalid #BOARD ID then, instead of redirecting to a
+   random valid board, the user should get an error message. (And a link
+   to a random new board?)

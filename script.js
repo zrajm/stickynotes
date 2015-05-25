@@ -39,10 +39,12 @@ jQuery.fn.hasAnyClass = function (selector) {
 };
 
 function getBoardID() {
-    if (!location.hash.match(/^#[a-zA-Z0-9_-]{22}$/)) {
+    var boardID = location.hash.replace(/^#?/, "");
+    if (boardID === "") {                      // no board name = create one
         history.replaceState(null, null, "#" + random132BitString());
+        boardID = location.hash.replace(/^#?/, "");
     }
-    return location.hash.replace(/^#/, "");
+    return boardID;
 }
 
 (function () {
