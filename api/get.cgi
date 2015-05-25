@@ -34,13 +34,12 @@ for FILE; do                                   # loop over $@
     check_id "$NOTE_ID" note
 
     read_data JSON "$FILE" 2>/dev/null
-    check_json "$JSON" "500 Internal Server Error" "note '$NOTE_ID'"
+    check_json "$JSON" 500 "note '$NOTE_ID'"
 
     DATA="$DATA\"$NOTE_ID\":${JSON:-\{\}},"
 done
 
-reply "200 OK"
-echo "{${DATA%,}}"
+reply 200 "{${DATA%,}}"
 
 ##############################################################################
 

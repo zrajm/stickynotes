@@ -438,3 +438,8 @@
    Currently the board associated with a specific hash location isn't loaded if
    one changes the hash location (one has to do a manual refresh after entering
    hash location).
+** DONE Refactor: 'reply' shell function now only needs HTTP error number
+   CLOSED: [2015-05-25 Mon 02:24]
+   Instead of having to specify the full error string (e.g. "404 Not Found")
+   for the 'reply' function it is now enough to specify the error code number
+   only (e.g. "400") and 'reply' will fill message given in the HTTP specs.

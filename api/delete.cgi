@@ -15,9 +15,9 @@ check_full_id "$FULL_ID"
 FILE="$NOTE_DIR/$FULL_ID.json"
 
 rm -f "$FILE" 2>/dev/null \
-    || reply "500 Internal Server Error" "Failed to delete file"
+    || reply 500 "Failed to delete file"
 
-reply "204 No Content"
+reply 204
 
 ##############################################################################
 

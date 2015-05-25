@@ -125,9 +125,9 @@ function getBoardID() {
                 return zMax;
             },
             json: function (id) {
-                return id ?
-                        JSON.stringify(noteCache[id]) :
-                        JSON.stringify(noteCache, null, 4);
+                return (id ?
+                    JSON.stringify(noteCache[id]) :
+                    JSON.stringify(noteCache, null, 4)) + "\n";
             },
             get: function (id, prop) {
                 var value, note = {};
