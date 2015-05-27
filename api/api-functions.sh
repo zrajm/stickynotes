@@ -58,6 +58,21 @@ reply() {
     exit 0
 }
 
+# Usage: STRING VAR1 VAR2[..]
+#
+# Split STRING on slash, return the various parts in the named variables
+# (intended for BOARD/NOTE IDs). If there are more VAR(s) named than there are
+# parts in STRING, then the last VAR(s) will be empty. If there are more parts
+# in STRING than VAR(s), then the last VAR will continue all the parts that
+# remain in STRING.
+split_id() {
+    local VAR="$1"
+    shift 1
+    eval "IFS=/ read $*" <<EOF
+$VAR
+EOF
+}
+
 check_id() {
     local ID="$1" TYPE="$2"
     local MSG="in $TYPE ID"                    # 'in board ID' / 'in note ID'
@@ -71,11 +86,11 @@ check_id() {
 
 # Split ID into board & note ID and check them.
 check_full_id() {
-    local IFS="/"
-    set -- $1                                  # split on slash into $@
-    [ $# -eq 2 ] \
-        || reply 400 "Exactly one slash required in parameter"
-    local BOARD_ID="$1" NOTE_ID="$2"
+    local FULL_ID="$1" BOARD_ID NOTE_ID REST
+    split_id "$FULL_ID" BOARD_ID NOTE_ID REST
+    if [ -n "$REST" ]; then
+        reply 400 "Exactly one slash required in parameter"
+    fi
     check_id "$BOARD_ID" board
     check_id  "$NOTE_ID" note
 }

@@ -13,23 +13,23 @@
 # structure is retuned (appropriate since the board is empty).
 ##############################################################################
 
-# Make sure file name(s) are in $@.
-case "$1" in
-    */*)                                       # BOARD_ID/NOTE_ID
-        FULL_ID="$1"
-        check_full_id "$FULL_ID"
-        set -- "$NOTE_DIR/$FULL_ID.json" ;;    #   add path & extension in $@
-    *)                                         # BOARD_ID only
-        BOARD_ID="$1"
-        check_id "$BOARD_ID" board
-        set -- "$NOTE_DIR/$BOARD_ID/"*.json    #   expand glob into $@
-        [ "$1" = "$NOTE_DIR/$BOARD_ID/*.json" ] \
-            && shift ;;                        #   remove glob if no match
-esac
+split_id "$1" BOARD_ID NOTE_ID REST
+if [ -n "$REST" ]; then
+    reply 400 "Exactly one slash required in parameter"
+fi
+
+check_id "$BOARD_ID" board
+DIR="$NOTE_DIR/$BOARD_ID"
+if [ -n "$NOTE_ID" ]; then
+    set -- "$DIR/$NOTE_ID.json"                # put filename into $@
+else
+    set -- "$DIR/"*.json                       # expand glob into $@
+    [ "$1" = "$DIR/*.json" ] && shift          # remove glob if not matching
+fi
 
 DATA=""
 for FILE; do                                   # loop over $@
-    NOTE_ID="${FILE##*/}"                      #   strip path
+    NOTE_ID="${FILE#$DIR/}"                    #   strip path
     NOTE_ID="${NOTE_ID%.json}"                 #   strip ext
     check_id "$NOTE_ID" note
 

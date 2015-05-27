@@ -14,8 +14,9 @@ FULL_ID="$1"
 check_full_id "$FULL_ID"
 FILE="$NOTE_DIR/$FULL_ID.json"
 
-rm -f "$FILE" 2>/dev/null \
-    || reply 500 "Failed to delete file"
+# Intentionally ignoring "missing file" errors (since delete will be invoked
+# even on self-created long polls, where no 'by' field can be passed).
+rm -f "$FILE" 2>/dev/null || reply 500 "Failed to delete file"
 
 reply 204
 
