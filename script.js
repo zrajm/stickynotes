@@ -144,7 +144,7 @@ menu = (function () {
 }());
 
 function drawDump(rawText) {
-    $('#dump').html('<pre>' + rawText + '</pre>');
+    //$('#dump').html('<pre>' + rawText + '</pre>');
 }
 
 function hideError() { errorElement.hide(); }

@@ -1,5 +1,14 @@
 -*- org -*-
 
+* TODO Remove beginner's instruction when 1st note is created
+  The 'Right click for the good stuff.' should disappear if one or more
+  stickynotes exists on the board.
+* TODO Add some (more) credits on screen
+  Link to github + license
+* TODO Show debug dump when '?debug' is included in URL
+  Make it possible to re-enable using "?debug" or something?
+
+  '?var=var#hash' (everything after '#' is client side)
 * TODO Refactor: Put board & DOM elements into separate object
   Split stuff into separate files.
   + Network
@@ -188,8 +197,6 @@
        "You're Missing the Point of Promises"
   [4]: https://github.com/kriskowal/q/wiki/Coming-from-jQuery
        "Coming from jQuery" esp. chapter "Single vs. Multiple Values"
-* TODO Add some credits on screen
-  Link to github + my name + license
 * TODO Key bindings
 ** TODO <Tab>/<Shift-Tab> to move selection between notes
 ** TODO Arrow keys to move selected note
@@ -455,3 +462,6 @@
    to a random new board?)
 ** DONE Put makeNoteCache() in its own Javascript file
    CLOSED: [2015-05-25 Mon 09:26]
+** DONE Change GUI to make it look professional
+   CLOSED: [2015-05-28 Thu 22:53]
+   Removed debug dump, added name of program & programmer + copyright year.
