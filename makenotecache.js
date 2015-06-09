@@ -32,15 +32,6 @@ function makeNoteCache(opt) {
         });
     }
 
-    function percentify(value, maxValue) {
-        var percent = (value / maxValue) * 100;
-        return +(percent.toFixed(3));      // round off to 3 decimals
-    }
-    function pixelize(value, maxValue) {
-        var pixel = (value * maxValue) / 100;
-        return +(pixel.toFixed());         // round off to whole number
-    }
-
     var jqProp = { x: "outerWidth", y: "outerHeight" }
     function getSame(value, prop, id) {
         var boardSize = boardPixelSize[prop],
@@ -48,13 +39,13 @@ function makeNoteCache(opt) {
             // (used only when GUI note does not exist yet, i.e. on init)
             noteSize = $("#" + id)[ jqProp[prop] ]() || 150,
             maxValue = boardSize - noteSize;
-        return pixelize(value, maxValue);
+        return COORD.pixelize(value, maxValue);
     }
     function setSame(value, prop, id) {
         var boardSize  = boardPixelSize[prop],
             noteSize = $("#" + id)[ jqProp[prop] ]() || 150,
             maxValue   = boardSize - noteSize;
-        return percentify(value, maxValue);
+        return COORD.percentify(value, maxValue);
     }
     var getConv = { x: getSame, y: getSame };
     var setConv = { x: setSame, y: setSame };
