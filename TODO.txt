@@ -1,5 +1,31 @@
 -*- org -*-
 
+* TODO Erase note if check_json fails on GET(?)
+  Fetching of bad data currently results in errors, but mightn't it just as
+  well fail silently, and case the bad data to be erased on the server?
+* TODO Rewrite check_* function return result in named variable
+  E.g. replace the current hard-to-read:
+
+      check_json "$JSON" 500 "note '$NOTE_ID'"
+
+  with the more straightforward:
+
+      check_json ERR "$JSON" || reply 500 "$ERR in note '$NOTE_ID'"
+
+  Requiring the rewrite of the check_* functions too, of course. check_json()
+  would look like this:
+
+      check_json() {
+          case "$2" in
+              *"<"* | *">"*)                   # don't allow any HTML
+                  eval "$1='HTML not allowed in JSON'" ;;
+              "{"*"}")
+                  eval "$1=''"; return 0 ;;
+              "") eval "$1='No data found'" ;;
+              *)  eval "$1='Malformed JSON'" ;;
+          esac
+          return 1
+      }
 * TODO Remove beginner's instruction when 1st note is created
   The 'Right click for the good stuff.' should disappear if one or more
   stickynotes exists on the board.
@@ -465,3 +491,5 @@
 ** DONE Change GUI to make it look professional
    CLOSED: [2015-05-28 Thu 22:53]
    Removed debug dump, added name of program & programmer + copyright year.
+** DONE Server should refuse to accept any JSON with '<' or '>' in it
+   CLOSED: [2015-06-09 Tue 23:54]
