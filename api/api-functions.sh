@@ -51,10 +51,11 @@ reply() {
         ???) : ;;                              # HTTP failure
         *) MSG="Exit code $CODE"; CODE=500 ;;  # shell trap
     esac
-    echo "Status: $CODE $(http_status_msg "$CODE")${MSG:+: $MSG}"
-    echo "Content-Type: application/json"
-    echo
-    [ -n "$BODY" ] && echo "$BODY"
+    printf "%s\n" \
+        "Status: $CODE $(http_status_msg "$CODE")${MSG:+: $MSG}" \
+        "Content-Type: application/json" \
+        ""
+    [ -n "$BODY" ] && printf "%s\n" "$BODY"
     exit 0
 }
 
@@ -136,7 +137,7 @@ write_data() {
     read -r PREVIOUS <"$FILE" || :             # ignore non-existing old file
     [ "$DATA" = "$PREVIOUS" ] && return 0      # do nada if data is unchanged
     make_dir "$NOTE_DIR"
-    echo "$DATA" >"$FILE" || {
+    printf "%s\n" "$DATA" >"$FILE" || {
         [ -w "$FILE" ] || reply 403 "File write protected"
         reply 500 "Failed to write file"
     }

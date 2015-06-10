@@ -1,5 +1,12 @@
 -*- org -*-
 
+* TODO Filter out any HTML when user paste into note
+  GUI allows HTML formatted input through pasting, but refuses to save anything
+  with HTML in it (to avoid HTML injection attacks by mean of <script> or other
+  tags).
+
+  In order to make the user experience a bit smoother, any formatting in pasted
+  text should be filtered out by the client.
 * TODO Erase note if check_json fails on GET(?)
   Fetching of bad data currently results in errors, but mightn't it just as
   well fail silently, and case the bad data to be erased on the server?
@@ -248,6 +255,8 @@
 * TODO Better error messages(?)
   Should error messages include the board/note ID number (where applicable)?
 * SOMEDAY/MAYBE
+** TODO If pasting without a note selected, create a new note(?)
+   Which color? Same color as last created note?
 ** TODO Have one single URL for get/put/delete API calls
    It's very nice and easy to get quick overview with each of these put into
    separate files, but if all CGI files are put into a single dir, then an
@@ -493,3 +502,12 @@
    Removed debug dump, added name of program & programmer + copyright year.
 ** DONE Server should refuse to accept any JSON with '<' or '>' in it
    CLOSED: [2015-06-09 Tue 23:54]
+** DONE BUGFIX: CGI shouldn't transform '\n' into newline when writing files
+   CLOSED: [2015-06-11 Thu 00:53]
+   Terribly annoying bug caused by the retarded behavior of POSIX command
+   'echo' (which "helpfully" translates "\n" into a newline, even though '-e'
+   argument is not given -- actually, neither '-E' nor '-e' is supported
+   according to dash's man page).
+
+   Replaced all occurrences of 'echo' where any variable is included in the
+   argument with 'printf "%s\n"' instead.
