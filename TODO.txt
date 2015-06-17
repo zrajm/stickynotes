@@ -1,5 +1,49 @@
 -*- org -*-
 
+* TODO UI: Scale note & font size depending on resolution
+  Suggestion based on observation when used in Scrum Retrospective meeting.
+
+  Currently only the note coordinates are scaled to fit the current window
+  size, but maybe note size and font size should also be scaled? It would make
+  for more easily readable stickynote boards, e.g. on low resolutioned
+  projectors etc., but this might also be a step in the wrong direction in that
+  we're working against the native resolution of the screen -- neutralizing the
+  advantage of highres.
+* TODO UI: Popup menu by other means than right-click(?)
+  Suggestion based on observation when used in Scrum Retrospective meeting.
+
+  Right-clicking seems counter intuitive for many people, maybe some other
+  method should be used. An explicit 'toolbox' menu, along the side of the
+  window (like in awwapp.com?) or maybe just left-clicking on the
+  background.(?)
+* TODO UI: Highlighting of note to show other users
+  Suggestion based on observation when used in Scrum Retrospective meeting.
+
+  This would be great when in a Skype conversation pointing out one note to
+  other people for some reason.
+
+  Maybe have a 'highlight' menu entry, which highlights just one note for all
+  other users to see? Maybe just indicate which note was the last note to be
+  updated via server poll? (The selection border could maybe be used for this?)
+* TODO Error messages: Include JSON body with all error messages
+  Each HTTP response code should also be given a body containing a JSON
+  representation of the error.
+
+  {
+      "code" : 1234,            // HTTP error code
+      "message" : "Something bad happened :(",
+      "description" : "More details about the error here"
+  }
+
+  See also:
+  https://blog.apigee.com/detail/restful_api_design_what_about_errors
+  http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#errors
+
+  As an alternative to the above scheme, one could also always include
+  '"ok":true' (in success responses) or '"ok":false' (in error responses) in
+  the JSON response and always set the HTTP status code to 200. -- This,
+  however, seem to be frowned upon by many (it being considered more SOAP than
+  REST).
 * TODO CGIs should indicate missing argument in error message
   This would've helped in figuring out the problem when switching to Lighttpd,
   and so might be helpful to someone else at some other point.
@@ -258,6 +302,11 @@
 * TODO Better error messages(?)
   Should error messages include the board/note ID number (where applicable)?
 * SOMEDAY/MAYBE
+** TODO UI: Timer function(?)
+   Suggestion based on observation when used in Scrum Retrospective meeting.
+
+   Sometimes stickynotes exercises are time-based. Maybe a countdown timer would
+   be useful here?
 ** TODO If pasting without a note selected, create a new note(?)
    Which color? Same color as last created note?
 ** TODO Have one single URL for get/put/delete API calls
