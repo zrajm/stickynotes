@@ -1,5 +1,8 @@
 -*- org -*-
 
+* TODO CGIs should indicate missing argument in error message
+  This would've helped in figuring out the problem when switching to Lighttpd,
+  and so might be helpful to someone else at some other point.
 * TODO Filter out any HTML when user paste into note
   GUI allows HTML formatted input through pasting, but refuses to save anything
   with HTML in it (to avoid HTML injection attacks by mean of <script> or other
@@ -511,3 +514,9 @@
 
    Replaced all occurrences of 'echo' where any variable is included in the
    argument with 'printf "%s\n"' instead.
+** DONE CGIs use $QUERY_STRING instead of args
+   CLOSED: [2015-06-16 Tue 18:38]
+   'api-functions.sh' now puts $QUERY_STRING into $@.
+
+   Lighttpd does not pass along the $QUERY_STRING as an argument in the same
+   way as Apache do.
