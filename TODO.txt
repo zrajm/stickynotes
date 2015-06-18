@@ -25,25 +25,6 @@
   Maybe have a 'highlight' menu entry, which highlights just one note for all
   other users to see? Maybe just indicate which note was the last note to be
   updated via server poll? (The selection border could maybe be used for this?)
-* TODO Error messages: Include JSON body with all error messages
-  Each HTTP response code should also be given a body containing a JSON
-  representation of the error.
-
-  {
-      "code" : 1234,            // HTTP error code
-      "message" : "Something bad happened :(",
-      "description" : "More details about the error here"
-  }
-
-  See also:
-  https://blog.apigee.com/detail/restful_api_design_what_about_errors
-  http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#errors
-
-  As an alternative to the above scheme, one could also always include
-  '"ok":true' (in success responses) or '"ok":false' (in error responses) in
-  the JSON response and always set the HTTP status code to 200. -- This,
-  however, seem to be frowned upon by many (it being considered more SOAP than
-  REST).
 * TODO CGIs should indicate missing argument in error message
   This would've helped in figuring out the problem when switching to Lighttpd,
   and so might be helpful to someone else at some other point.
@@ -575,3 +556,35 @@
    to pass in command line args form the shell, so added support for that back
    in. Still pass along $QUERY_STRING as an argument to CGI shell scripts,
    though.
+** DONE Error messages: Include JSON body with all error messages
+   CLOSED: [2015-06-18 Thu 09:42]
+   Each HTTP response code should also be given a body containing a JSON
+   representation of the error.
+
+   Current error message:
+
+       {
+           "code" : 1234,            // HTTP error code
+           "message" : "Something bad happened :(",
+       }
+
+   Ideal error message:
+
+       {
+           "code" : 1234,            // HTTP error code
+           "message" : "Something bad happened :(",
+           "description" : "More details about the error here",
+           "info" : "https://github.com/zrajm/stickynotes/wiki/error/1234"
+       }
+
+   (Where 'info' gives developers a place to discuss the specific message.)
+
+   See also:
+   https://blog.apigee.com/detail/restful_api_design_what_about_errors
+   http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#errors
+
+   As an alternative to the above scheme, one could also always include
+   '"ok":true' (in success responses) or '"ok":false' (in error responses) in
+   the JSON response and always set the HTTP status code to 200. -- This,
+   however, seem to be frowned upon by many (it being considered more SOAP than
+   REST).

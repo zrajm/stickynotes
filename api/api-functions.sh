@@ -31,6 +31,29 @@ http_status_msg() {
     esac
 }
 
+http_header() {
+    local CODE="$1" MSG="$2"
+    local HTTP_MSG="$(http_status_msg "$CODE")"
+    printf "%s\n" \
+        "Status: $CODE $HTTP_MSG${MSG:+: $MSG}" \
+        "Content-Type: application/json" \
+        ""
+}
+
+http_failure() {
+    local CODE="$1" MSG="$2"
+    http_header "$CODE" "$MSG"
+    printf '{"%s":%s,"%s":"%s"}\n' \
+        code    "$CODE" \
+        message "$HTTP_MSG${MSG:+: $MSG}"
+}
+
+http_success() {
+    local CODE="$1" BODY="$2"
+    http_header "$CODE"
+    printf "%s\n" "$BODY"
+}
+
 # Usage: reply STATUSCODE MSG|BODY
 #
 # Terminates script and outputs HTTP response. This is the ONLY way you should
@@ -43,20 +66,16 @@ http_status_msg() {
 # where script was terminated by other means ('exit', reaching end of file,
 # command returning false under 'set -e' etc). Used this way you'll get a
 # proper HTTP error reported even in these instances.
-#
 reply() {
-    local CODE="${1:-$?}" MSG="$2"             # CODE = arg or prev exit status
+    local CODE="${1:-$?}" MSG="$2"        # CODE = arg or prev exit status
     trap - 0
     case "$CODE" in
-        2??) BODY="$MSG"; MSG="" ;;            # HTTP success
-        ???) : ;;                              # HTTP failure
-        *) MSG="Exit code $CODE"; CODE=500 ;;  # shell trap
+        # three digit CODE = HTTP style call
+        2??) http_success "$CODE" "$MSG" ;;
+        ???) http_failure "$CODE" "$MSG" ;;
+        # non-three digit = caught by shell trap
+        *) http_failure "500" "Exit code $CODE" ;;
     esac
-    printf "%s\n" \
-        "Status: $CODE $(http_status_msg "$CODE")${MSG:+: $MSG}" \
-        "Content-Type: application/json" \
-        ""
-    [ -n "$BODY" ] && printf "%s\n" "$BODY"
     exit 0
 }
 

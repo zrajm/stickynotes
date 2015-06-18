@@ -118,9 +118,10 @@ function drawDump(rawText) {
 
 function hideError() { errorElement.hide(); }
 function drawError(jqXHR, textStatus, errorThrown) {
+    var error = jqXHR.responseJSON;
     var errMsg = "<b>" + this.type + " request failed</b>" +
-        "<br>Server " + textStatus + ": " + jqXHR.status + " " +
-        errorThrown.replace(/:\s+/, " &ndash; ");
+        "<br>Server " + textStatus + ": " + error.code + " " +
+        error.message.replace(/:\s+/, " &ndash; ");
     errorElement.html(errMsg).show();
 }
 
