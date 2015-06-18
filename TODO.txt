@@ -1,4 +1,4 @@
--*- org -*-
+#+TODO: TODO | DONE WONTFIX -*- org -*-
 
 * TODO UI: Scale note & font size depending on resolution
   Suggestion based on observation when used in Scrum Retrospective meeting.
@@ -25,9 +25,6 @@
   Maybe have a 'highlight' menu entry, which highlights just one note for all
   other users to see? Maybe just indicate which note was the last note to be
   updated via server poll? (The selection border could maybe be used for this?)
-* TODO CGIs should indicate missing argument in error message
-  This would've helped in figuring out the problem when switching to Lighttpd,
-  and so might be helpful to someone else at some other point.
 * TODO Filter out any HTML when user paste into note
   GUI allows HTML formatted input through pasting, but refuses to save anything
   with HTML in it (to avoid HTML injection attacks by mean of <script> or other
@@ -283,6 +280,18 @@
 * TODO Better error messages(?)
   Should error messages include the board/note ID number (where applicable)?
 * SOMEDAY/MAYBE
+** TODO More detailed error messages
+   See also [[Error messages: Include JSON body with all error messages]] below.
+   The most interesting feature below is the 'info' link, which should link to
+   a place where developers can discuss the error (e.g. a wiki page), to help
+   them help each other and support a (possible) community.
+
+       {
+           "code" : 1234,            // HTTP error code
+           "message" : "Something bad happened :(",
+           "description" : "More details about the error here",
+           "info" : "https://github.com/zrajm/stickynotes/wiki/error/1234"
+       }
 ** TODO UI: Timer function(?)
    Suggestion based on observation when used in Scrum Retrospective meeting.
 
@@ -588,3 +597,16 @@
    the JSON response and always set the HTTP status code to 200. -- This,
    however, seem to be frowned upon by many (it being considered more SOAP than
    REST).
+** WONTFIX CGIs should indicate missing argument in error message
+   CLOSED: [2015-06-18 Thu 20:42]
+   This would've helped in figuring out the problem when switching to Lighttpd,
+   and so might be helpful to someone else at some other point.
+
+   WONTFIX reason: Not really needed, or already in place depending on how you
+   look at it. Missing a missing argument/$QUERY_STRING is actually reported as
+   "400 Bad request: Missing board ID" or similar.
+
+   The issue was actually caused by the fact that Lighttpd does not pass on any
+   custom HTTP error string, and this was resolved by also returning the error
+   message (in JSON format) in the response body, and have the client present
+   this to the user in the case of error.
