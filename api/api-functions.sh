@@ -3,7 +3,7 @@
 NOTE_DIR="../data"
 trap reply 0
 set -e
-set -- "$QUERY_STRING"                         # put $QUERY_STRING into $@
+set -- "${1:-$QUERY_STRING}"                   # args or $QUERY_STRING into $@
 
 # This script modifies the strings passed with the HTTP status code in order
 # to give more intelligeble output in the Chrome console. As far as I know

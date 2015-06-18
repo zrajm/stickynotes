@@ -569,3 +569,9 @@
 
    Lighttpd does not pass along the $QUERY_STRING as an argument in the same
    way as Apache do.
+** DONE CGIs now use both arg and $QUERY_STRING
+   CLOSED: [2015-06-18 Thu 09:39]
+   When debugging and testing the back end CGI scripts it's awesome to be able
+   to pass in command line args form the shell, so added support for that back
+   in. Still pass along $QUERY_STRING as an argument to CGI shell scripts,
+   though.
