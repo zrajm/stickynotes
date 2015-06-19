@@ -1,5 +1,6 @@
 #+TODO: TODO | DONE WONTFIX -*- org -*-
 
+* TODO Include screen shots on GitHub README
 * TODO UI: Scale note & font size depending on resolution
   Suggestion based on observation when used in Scrum Retrospective meeting.
 
@@ -25,6 +26,11 @@
   Maybe have a 'highlight' menu entry, which highlights just one note for all
   other users to see? Maybe just indicate which note was the last note to be
   updated via server poll? (The selection border could maybe be used for this?)
+
+  Maybe add a 'note' data file called 'meta'(?) -- this would then be
+  automatically pushed to the clients without any change to the code, and could
+  be used by the clients to update board-global information such as which note
+  is currently selected.
 * TODO Filter out any HTML when user paste into note
   GUI allows HTML formatted input through pasting, but refuses to save anything
   with HTML in it (to avoid HTML injection attacks by mean of <script> or other
