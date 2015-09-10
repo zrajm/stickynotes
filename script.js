@@ -1,5 +1,13 @@
 /*global $, jQuery */
 
+// Elements that are to be autoResizeHeight()ed must have zero width borders, for
+// the size to be computed correctly (but may have any amount of padding).
+$.fn.autoResizeHeight = function () {
+    // Get height required to fit all content.
+    var newHeight = this.css('height', 'auto').get(0).scrollHeight;
+    this.outerHeight(newHeight);
+}
+
 function getBoardID() {
     var boardID = location.hash.replace(/^#?/, "");
     if (boardID === "") {                      // no board name = create one
@@ -119,6 +127,12 @@ function drawDump(rawText) {
 function hideError() { errorElement.hide(); }
 function drawError(jqXHR, textStatus, errorThrown) {
     var error = jqXHR.responseJSON;
+    console.log(JSON.stringify(jqXHR, null, 4));
+    if (!error) {
+        // FIXME: On startup in Firefox jqXHR is initially set to:
+        // { readyState: 0, status: 0, statusText: "error" } but why?
+        return false;
+    }
     var errMsg = "<b>" + this.type + " request failed</b>" +
         "<br>Server " + textStatus + ": " + error.code + " " +
         error.message.replace(/:\s+/, " &ndash; ");
@@ -131,11 +145,13 @@ function drawNote(id, notes) {
     if (!note) {                           // note has been deleted
         return noteElement.remove();       //   remove any note in GUI
     }
+    setTimeout(function () {               // after note update
+        noteElement.autoResizeHeight();    //   trigger note resize
+    }, 0);
     if (noteElement.length === 0) {        // create new GUI note
         angle = rnd(-10, 10) + "deg";
-        noteElement = $("<div>", {
+        noteElement = $("<textarea>", {
             "class"          : "note",
-            "contenteditable": "",
             "spellcheck"     : false,
             "id"             : id
         }).
@@ -145,6 +161,7 @@ function drawNote(id, notes) {
             }).
             appendTo("main").
             draggable({
+                "cancel"     : "text",
                 "containment": "parent",
                 "stop"       : stopDragging
             }).
@@ -152,7 +169,7 @@ function drawNote(id, notes) {
     }
     return noteElement.                    // modify new or existing note
         setColorClass(note.color).
-        html(note.text || "<br>").
+        html(note.text || "").
         css({
             left  : note.x,
             top   : note.y,
@@ -223,11 +240,11 @@ $(window).resize(function () {
     notes.setSize(mainElement.width(), mainElement.height());
 }).on('hashchange', redrawBoard);
 
-
-mainElement.on("input", function (event) {
+mainElement.on("keyup", "textarea", function (event) {
     var element = $(event.target),
         id      = element.prop("id"),
-        value   = element.html();
+        value   = element.val();
+    element.autoResizeHeight();
     notes.push(id, { text: value }, true);
 }).
     on("contextmenu", menu.open).

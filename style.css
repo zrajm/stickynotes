@@ -13,7 +13,7 @@ main {
     z-index: -2;
 }
 
-[contenteditable]:focus, .selected {
+.note:focus, .selected {
     outline: 4px solid rgba(0,0,0,.5);
 }
 
@@ -98,8 +98,11 @@ main {
     box-shadow: 0px 0px 3px rgba(0, 0, 0, .8);
     width: 150px;
     min-height: 150px;
-    border: 5px solid transparent;
+    border: 0;           /* Firefox. Also autosize() needs zero width border. */
     position: absolute;
+    resize: none;        /* Disable textarea resize widget. */
+    font-family: inherit;/* Firefox. */
+    overflow: hidden;
 }
 
 /* .note:after { */

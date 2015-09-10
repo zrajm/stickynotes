@@ -1,5 +1,6 @@
 #+TODO: TODO | DONE WONTFIX -*- org -*-
 
+* TODO Allow '<' and '>' in notes
 * TODO Include screen shots on GitHub README
 * TODO UI: Scale note & font size depending on resolution
   Suggestion based on observation when used in Scrum Retrospective meeting.
@@ -17,6 +18,18 @@
   method should be used. An explicit 'toolbox' menu, along the side of the
   window (like in awwapp.com?) or maybe just left-clicking on the
   background.(?)
+* TODO UI: Help for confused users(?)
+  Right-click instructions in form of non-obtrusive dropdown thingy that you
+  can click "I got it" on?
+
+  Reminder for confused users? (How to detect confusion? Assume that user that
+  doesn't click at all are confused? Assume that user that click a lot are
+  confused? -- Whenever a user has created a number of notes we should move out
+  of "confused" mode, since we know the user can handle it.)
+
+  Popup reminder shown because of detected confusion should not trigger
+  immediately, but after a delay of a second (or so) -- So that the user
+  doesn't think that their action *caused* the reminder.
 * TODO UI: Highlighting of note to show other users
   Suggestion based on observation when used in Scrum Retrospective meeting.
 
@@ -31,13 +44,30 @@
   automatically pushed to the clients without any change to the code, and could
   be used by the clients to update board-global information such as which note
   is currently selected.
-* TODO Filter out any HTML when user paste into note
-  GUI allows HTML formatted input through pasting, but refuses to save anything
-  with HTML in it (to avoid HTML injection attacks by mean of <script> or other
-  tags).
+* DONE Strip HTML on copy/paste into note
+  CLOSED: [2015-09-10 Thu 09:24]
+  Thwarted the possibility of Javascript injection attacks by transitioning
+  from <div>s with the `contenteditable` attribute, to <textareas>. This also
+  automatically strips all formatting off of content pasted into a note.
 
-  In order to make the user experience a bit smoother, any formatting in pasted
-  text should be filtered out by the client.
+  Some experiments done by Daniel Sahlberg showed that a small Javascript
+  script could be inserted using copy/paste that (e.g.) could be made to
+  redirect all other clients away from the Stickynotes page -- not exactly
+  ideal.
+
+  The server side was given some simple logic to refuse all HTML content, but
+  this (unfortunately) destroyed the possibility of pasting formatted content
+  into a note altogether (any such note would simply not sync to the server,
+  and therefore propagate to the other clients).
+
+  Notes where never meant to contain formatted content (bold, italic, headlines
+  or any somesuch). So rather than introducing complex logic to filter out HTML
+  tags when a user paste text into a note, switched to using <textarea> tags
+  for the notes (instead of <div> tags with the `contenteditable` attribute).
+
+  Textareas are treated differently by the browser, which strips away any
+  formatting from the copy/paste buffer automatically whenever content is
+  pasted. Making HTML stripping a non-issue.
 * TODO Erase note if check_json fails on GET(?)
   Fetching of bad data currently results in errors, but mightn't it just as
   well fail silently, and case the bad data to be erased on the server?
@@ -79,7 +109,6 @@
   + GUI updates / screen state
 * TODO Use HTTP streaming instead of long polling?
   Probably, with many clients (or too much activity) events will be dropped
-* TODO Strip HTML on copy/paste
 * [0/2] Tests
 ** TODO Test CGI scripts
 ** TODO Test Javascript
