@@ -1,6 +1,5 @@
 #+TODO: TODO | DONE WONTFIX -*- org -*-
 
-* TODO Allow '<' and '>' in notes
 * TODO Include screen shots on GitHub README
 * TODO UI: Scale note & font size depending on resolution
   Suggestion based on observation when used in Scrum Retrospective meeting.
@@ -623,7 +622,6 @@
    this to the user in the case of error.
 ** DONE Strip HTML on copy/paste into note
    CLOSED: [2015-09-10 Thu 09:24]
-
    Thwarted the possibility of Javascript injection attacks by transitioning
    from <div>s with the `contenteditable` attribute, to <textareas>. This also
    automatically strips all formatting off of content pasted into a note.
@@ -647,3 +645,8 @@
    Textareas are treated differently by the browser, which strips away any
    formatting from the copy/paste buffer automatically whenever content is
    pasted. Making HTML stripping a non-issue.
+** DONE Allow '<' and '>' in notes
+   CLOSED: [2015-09-10 Thu 20:01]
+   Simply removed the server side check forbidding HTML to be stored, since
+   client now treats all text as plain text (additional escaping shouldn't be
+   needed).

@@ -117,13 +117,12 @@ check_full_id() {
 }
 
 # Very simplistic check. Only look to see that JSON data starts and ends with
-# curly braces, and that it doesn't contain any < or > (which would open up for
-# HTML injections with e.g. <script>).
+# curly braces, and that the data content isn't empty. (No longer bother to
+# look for < and >, since all text is handled as plain text by the client,
+# making Javascript injections impossible.)
 check_json() {
     local JSON="$1" CODE="$2" MSG="$3"
     case "$JSON" in
-        *["<>"]*)                                # don't allow any HTML
-            reply "$CODE" "HTML not allowed in JSON${MSG:+ in $MSG}" ;;
         "{"*"}") : ;;                          # require {...}
         "") reply "$CODE"   "Missing data${MSG:+ in $MSG}" ;;
         *)  reply "$CODE" "Malformed JSON${MSG:+ in $MSG}" ;;
