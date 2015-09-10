@@ -44,30 +44,6 @@
   automatically pushed to the clients without any change to the code, and could
   be used by the clients to update board-global information such as which note
   is currently selected.
-* DONE Strip HTML on copy/paste into note
-  CLOSED: [2015-09-10 Thu 09:24]
-  Thwarted the possibility of Javascript injection attacks by transitioning
-  from <div>s with the `contenteditable` attribute, to <textareas>. This also
-  automatically strips all formatting off of content pasted into a note.
-
-  Some experiments done by Daniel Sahlberg showed that a small Javascript
-  script could be inserted using copy/paste that (e.g.) could be made to
-  redirect all other clients away from the Stickynotes page -- not exactly
-  ideal.
-
-  The server side was given some simple logic to refuse all HTML content, but
-  this (unfortunately) destroyed the possibility of pasting formatted content
-  into a note altogether (any such note would simply not sync to the server,
-  and therefore propagate to the other clients).
-
-  Notes where never meant to contain formatted content (bold, italic, headlines
-  or any somesuch). So rather than introducing complex logic to filter out HTML
-  tags when a user paste text into a note, switched to using <textarea> tags
-  for the notes (instead of <div> tags with the `contenteditable` attribute).
-
-  Textareas are treated differently by the browser, which strips away any
-  formatting from the copy/paste buffer automatically whenever content is
-  pasted. Making HTML stripping a non-issue.
 * TODO Erase note if check_json fails on GET(?)
   Fetching of bad data currently results in errors, but mightn't it just as
   well fail silently, and case the bad data to be erased on the server?
@@ -645,3 +621,29 @@
    custom HTTP error string, and this was resolved by also returning the error
    message (in JSON format) in the response body, and have the client present
    this to the user in the case of error.
+** DONE Strip HTML on copy/paste into note
+   CLOSED: [2015-09-10 Thu 09:24]
+
+   Thwarted the possibility of Javascript injection attacks by transitioning
+   from <div>s with the `contenteditable` attribute, to <textareas>. This also
+   automatically strips all formatting off of content pasted into a note.
+
+   Some experiments done by Daniel Sahlberg showed that a small Javascript
+   script could be inserted using copy/paste that (e.g.) could be made to
+   redirect all other clients away from the Stickynotes page -- not exactly
+   ideal.
+
+   The server side was given some simple logic to refuse all HTML content, but
+   this (unfortunately) destroyed the possibility of pasting formatted content
+   into a note altogether (any such note would simply not sync to the server,
+   and therefore propagate to the other clients).
+
+   Notes where never meant to contain formatted content (bold, italic,
+   headlines or any somesuch). So rather than introducing complex logic to
+   filter out HTML tags when a user paste text into a note, switched to using
+   <textarea> tags for the notes (instead of <div> tags with the
+   `contenteditable` attribute).
+
+   Textareas are treated differently by the browser, which strips away any
+   formatting from the copy/paste buffer automatically whenever content is
+   pasted. Making HTML stripping a non-issue.
