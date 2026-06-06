@@ -33,6 +33,38 @@ permissions set so that it may write to the stickynotes data directory. On an
 Ubuntu/Debian machine the following commands (or something quite similar)
 should get you going.
 
+
+Lighttpd
+--------
+Install Lighttpd and enable the CGI module:
+
+    apt install lighttpd
+    sudo lighty-enable-mod cgi
+
+Thereafter, edit your Lighttpd config file `/etc/lighttpd/lighttpd.conf` and
+add the following line:
+
+    cgi.assign = (".cgi" => "")
+
+This specifies that all files with the file name extension `.cgi`, should be
+run using the interpreter specified on the `#!` shebang line of the file (if
+you want to, you can specify interpreter as `/bin/dash`).
+
+If you want the setting to affect the whole web server (and not a specific
+virtual host) you should put it at the root level of the config (and not inside
+a `$HTTP["host"] ... { ... }` section). I added the instruction after the
+`server.modules` statement at the top of the file).
+
+After that, reload the Lighttpd config with:
+
+    sudo service lighttpd force-reload
+
+Now you can continue with on to [Testing That It Works](#testing-that-it-works)
+and [User Settings](#user-settings) below.
+
+
+Apache
+------
 First install Apache and enable the CGI module:
 
     sudo apt-get install apache2
@@ -46,14 +78,39 @@ following options in the Apache config (the config file itself can be found in
     Options +ExecCGI
     AddHandler cgi-script .cgi
 
-Restart Apache, add yourself to the Apache's group (`www-data`) and change the
-permissions of stickynotes data directory (`data/`) so that Apache may write
-stuff there.
+Then restart Apache using:
 
     sudo service apache2 restart
+
+
+Testing That It Works
+---------------------
+You can test that everything works by running:
+
+    curl 'http://localhost/stickynotes/api/get.cgi'
+
+If everything works you should get an error from the stickynotes application
+complaining of faulty request, like so:
+
+    {"code":400,"message":": Missing board ID"}
+
+If, however, you instead see the source code of the `get.cgi` script, you have
+failed to enable CGI in your web server.
+
+
+User Settings
+-------------
+Finally add yourself to the web server's file permission group (`www-data`) and
+change the permissions of stickynotes data directory (`data/`) so that the web
+server may write stuff there.
+
     sudo adduser $USER www-data
     newgrp www-data
     chgrp -R www-data data/
     chmod -R g+w data
 
-[eof]
+What the `newgrp` command actually does is starting a new shell where the
+permission you added in the previous command is available, can be replaced by
+logging out and logging in again.
+
+<!--[eof]-->
