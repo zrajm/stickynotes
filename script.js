@@ -182,7 +182,7 @@ var request = (function () {
         DELETE: { type: "DELETE", url: "api/delete.cgi" },
         GET   : { type: "GET",    url: "api/get.cgi"    },
         POLL  : { type: "GET",    url: "api/poll.cgi"   },
-        PUT   : { type: "PUT",    url: "api/put.cgi"    }
+        POST  : { type: "POST",   url: "api/post.cgi"   }
     };
     return function (req, boardID, noteID, data) {
         var arg, opt = {
@@ -224,7 +224,7 @@ noteCacheOpts = {
             });
     },
     push: function (id, json) {
-        request("PUT", boardID, id, json).
+        request("POST", boardID, id, json).
             done(hideError);
     },
     redraw: function (id, note) {
